@@ -5,7 +5,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import page_index, page_setup, page_latex, page_manim, page_slides  # noqa: E402
+import page_index, page_setup, page_latex, page_manim, page_slides, page_practice, page_capstone, page_reference  # noqa: E402
 
 SITE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "site")
 
@@ -15,6 +15,9 @@ PAGES = {
     "latex.html": page_latex.render,
     "manim.html": page_manim.render,
     "slides.html": page_slides.render,
+    "practice.html": page_practice.render,
+    "capstone.html": page_capstone.render,
+    "reference.html": page_reference.render,
 }
 
 for name, fn in PAGES.items():

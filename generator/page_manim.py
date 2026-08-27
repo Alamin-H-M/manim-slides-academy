@@ -1,4 +1,4 @@
-from common import page, pre, vid, example, quiz, exercise, topic
+from common import page, pre, vid, example, quiz, exercise, topic, pretest
 
 T1 = topic(1, "mnm-scene", "Scenes & Mobjects — the two words that explain everything", """
 A <b>Scene</b> is your canvas + timeline. A <b>Mobject</b> ("mathematical object") is anything drawable:
@@ -310,6 +310,12 @@ exercise("Plot y = x³ − 3x on axes from −3 to 3 and animate a dot moving al
         self.add(dot)
         self.play(x.animate.set_value(2.2), run_time=4)'''))
 
+PRETEST = pretest([
+    ("Guess: in an animation library, what might a 'Scene' be?", "Your canvas + timeline. You subclass it and describe what happens in <code>construct()</code> — Topic 1."),
+    ("How do you think you'd make two animations happen at once?", "Pass both to one <code>play()</code> call. Sequential = separate calls — Topic 2."),
+    ("What could make a label FOLLOW a moving dot?", "A function that runs every frame — an <em>updater</em>. That's Topic 5, the superpower one."),
+])
+
 BODY = f"""
 <h1>Chapter 2 · Manim</h1>
 <p class="lead">Every example below shows the <b>exact code</b> on the left and the <b>real video it
@@ -320,7 +326,7 @@ each topic stands alone, so stop whenever you like.</p>
 <a href="#mnm-pos">3 Positioning</a><a href="#mnm-style">4 Color &amp; styling</a>
 <a href="#mnm-updaters">5 Updaters</a><a href="#mnm-graphs">6 Graphs &amp; MathTex</a>
 <a href="#mnm-ex">✅ Self-exam</a></div>
-{T1}{T2}{T3}{T4}{T5}{T6}{EXERCISES}
+{PRETEST}{T1}{T2}{T3}{T4}{T5}{T6}{EXERCISES}
 <div class="pager">
   <a href="latex.html"><span class="dir">← Previous</span>1 · LaTeX</a>
   <a href="slides.html" class="right"><span class="dir">Next chapter →</span>3 · manim-slides</a>

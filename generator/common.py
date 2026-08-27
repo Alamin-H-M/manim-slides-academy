@@ -10,6 +10,9 @@ NAV = [
     ("latex.html", "1 · LaTeX"),
     ("manim.html", "2 · Manim"),
     ("slides.html", "3 · Slides"),
+    ("practice.html", "🔁 Practice"),
+    ("capstone.html", "🏆 Capstone"),
+    ("reference.html", "📖 Reference"),
 ]
 
 
@@ -202,3 +205,13 @@ def challenge(key: str, prompt: str, target: str, hint: str = "") -> str:
             f'<div class="ch-btns"><button type="button" class="ch-hint">hint</button>'
             f'<button type="button" class="ch-reveal">give up — show solution</button></div>'
             f'</div>')
+
+
+def pretest(qas) -> str:
+    """Pre-test box: try to answer BEFORE learning (boosts retention even when wrong)."""
+    items = "".join(
+        f'<details class="answer" style="margin:6px 0"><summary>{esc(q)}</summary>'
+        f'<div class="inner muted">{a}</div></details>' for q, a in qas)
+    return ('<div class="note"><b>🧠 Before you start (30 seconds)</b>'
+            "Try to answer these from intuition — being wrong is fine, guessing first "
+            "is proven to make the real answers stick better:" + items + "</div>")

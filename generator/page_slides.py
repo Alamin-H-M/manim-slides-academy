@@ -1,4 +1,4 @@
-from common import page, pre, deck, example, quiz, exercise, topic
+from common import page, pre, deck, example, quiz, exercise, topic, pretest
 
 T1 = topic(1, "sld-first", "From Scene to Slide — one import, one call", """
 Change <code>Scene</code> to <code>Slide</code> (from manim_slides) and call
@@ -216,6 +216,11 @@ exercise("Final project: build a 5-slide deck teaching the quadratic formula —
 #   manim-slides convert --to html --offline QuadraticTalk talk.html
 #   manim-slides convert --to pptx QuadraticTalk talk.pptx'''))
 
+PRETEST = pretest([
+    ("Guess: what's the minimum change to turn an animation into a presentation?", "Inherit from <code>Slide</code> instead of <code>Scene</code> and mark pauses with <code>next_slide()</code>. That's genuinely all — Topic 1."),
+    ("A talk venue has no WiFi. What could go wrong with an HTML deck?", "If it loads its player from a CDN, you get a blank screen. The <code>--offline</code> flag bundles everything — Topic 2."),
+])
+
 BODY = f"""
 <h1>Chapter 3 · manim-slides</h1>
 <p class="lead">The payoff chapter: your animations become presentations. The decks below are
@@ -224,7 +229,7 @@ to advance, exactly like your audience would.</p>
 <div class="toc"><b>Topics</b>
 <a href="#sld-first">1 Scene → Slide</a><a href="#sld-run">2 Render, present, export</a>
 <a href="#sld-craft">3 Slide craft</a><a href="#sld-ex">✅ Self-exam</a></div>
-{T1}{T2}{T3}{EXERCISES}
+{PRETEST}{T1}{T2}{T3}{EXERCISES}
 <div class="pager">
   <a href="manim.html"><span class="dir">← Previous</span>2 · Manim</a>
   <a href="index.html" class="right"><span class="dir">Finish 🎉</span>Back to Home</a>

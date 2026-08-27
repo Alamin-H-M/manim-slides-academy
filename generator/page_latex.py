@@ -1,4 +1,4 @@
-from common import page, pre, texplay, example, quiz, exercise, topic, challenge
+from common import page, pre, texplay, example, quiz, exercise, topic, challenge, pretest
 
 T1 = topic(1, "ltx-what", "What LaTeX is (and the 60-second mental model)", """
 LaTeX is not a text editor — it's a <b>language</b>: you type plain text with commands like
@@ -154,6 +154,12 @@ exercise("Typeset a 3×3 identity matrix with square brackets.",
 exercise(r"Typeset the piecewise sign function: sgn(x) = -1 if x < 0, 0 if x = 0, 1 if x > 0.",
          pre("\\operatorname{sgn}(x) = \\begin{cases} -1 & x < 0 \\\\ 0 & x = 0 \\\\ 1 & x > 0 \\end{cases}", "latex"))
 
+PRETEST = pretest([
+    ("How do you think LaTeX makes a fraction?", "You guessed something like frac? It's <code>\\frac{a}{b}</code> — command, then two brace arguments. Details in Topic 1."),
+    ("What might the symbol for 'infinity' be called?", "<code>\\infty</code> — most symbols are just their English name with a backslash. Topic 2 has the greatest hits."),
+    ("Guess: how would LaTeX tell a fraction's top from its bottom?", "Braces: first <code>{top}</code> then <code>{bottom}</code>. Order and braces are the whole grammar — Topic 3."),
+])
+
 BODY = f"""
 <h1>Chapter 1 · LaTeX</h1>
 <p class="lead">Everything below is a <b>live playground</b> — edit the left side, the math re-renders
@@ -164,7 +170,8 @@ Total time: about 2 hours, best split over 2–3 sittings.<br>🎯 <b>New:</b> e
 <a href="#ltx-structure">3 Real formulas</a><a href="#ltx-brackets">4 Brackets &amp; multi-line</a>
 <a href="#ltx-matrices">5 Matrices</a><a href="#ltx-docs">6 Documents</a>
 <a href="#ltx-ex">✅ Self-exam</a></div>
-{T1}{T2}{T3}{T4}{T5}{T6}{EXERCISES}
+
+{PRETEST}{T1}{T2}{T3}{T4}{T5}{T6}{EXERCISES}
 <div class="pager">
   <a href="setup.html"><span class="dir">← Previous</span>Setup</a>
   <a href="manim.html" class="right"><span class="dir">Next chapter →</span>2 · Manim</a>

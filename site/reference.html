@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" class="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-site-verification" content="G9nUhiPGHB-PRAzOsDSdJxR47JKmGOSKM3EP1jkNtdk" />
+<title>Reference — Manim Slides Academy</title>
+<meta name="description" content="One-page searchable reference for LaTeX math commands, Manim mobjects/animations/positioning/updaters, and every manim-slides command — filterable and printable.">
+<link rel="canonical" href="https://alamin-h-m.github.io/manim-slides-academy/site/reference.html">
+<meta property="og:title" content="Reference — Manim Slides Academy">
+<meta property="og:description" content="One-page searchable reference for LaTeX math commands, Manim mobjects/animations/positioning/updaters, and every manim-slides command — filterable and printable.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://alamin-h-m.github.io/manim-slides-academy/site/reference.html">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Course","name":"Manim Slides Academy","description":"Free offline course teaching LaTeX, Manim and manim-slides with interactive examples.","provider":{"@type":"Organization","name":"Manim Slides Academy","sameAs":"https://github.com/Alamin-H-M/manim-slides-academy"},"isAccessibleForFree":true,"inLanguage":"en","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"hasCourseInstance":{"@type":"CourseInstance","courseMode":"online","courseWorkload":"PT7H"}}</script>
+<link rel="stylesheet" href="assets/css/site.css">
+
+<script defer src="assets/js/site.js"></script>
+</head>
+<body>
+<header class="site"><div class="inner">
+  <a class="logo" href="index.html">Manim Slides <b>Academy</b></a>
+  <nav class="main"><a href="index.html">Home</a><a href="setup.html">Setup</a><a href="latex.html">1 · LaTeX</a><a href="manim.html">2 · Manim</a><a href="slides.html">3 · Slides</a><a href="practice.html">🔁 Practice</a><a href="capstone.html">🏆 Capstone</a><a href="reference.html">📖 Reference</a></nav>
+</div></header>
+<main>
+
+<h1>📖 Reference — everything on one page</h1>
+<p class="lead">The lookup companion for daily work: every command taught in this course
+(plus the ones you'll want next week), organized and filterable. <kbd>Ctrl</kbd>+<kbd>F</kbd> works too —
+it's one page on purpose. Printable: this page strips its chrome when printed.</p>
+
+<p><input id="ref-filter" type="search" placeholder="filter… e.g. 'matrix', 'fade', 'updater', 'pptx'"
+   style="width:100%;padding:12px 14px;border-radius:8px;border:1px solid var(--border);
+          background:var(--bg2);color:var(--fg);font-size:1rem;outline:none"></p>
+<p class="muted small" id="ref-count"></p>
+<h2 id="latex-structure">LaTeX — structure</h2><table class="ref-table"><tr><td><code>\frac{a}{b}</code></td><td class="muted">fraction</td></tr><tr><td><code>x^{2}</code></td><td class="muted">superscript / power</td></tr><tr><td><code>x_{i}</code></td><td class="muted">subscript / index</td></tr><tr><td><code>\sqrt{x} \quad \sqrt[3]{x}</code></td><td class="muted">square root · nth root</td></tr><tr><td><code>\sum_{i=1}^{n} \quad \prod_{i=1}^{n}</code></td><td class="muted">sum · product with limits</td></tr><tr><td><code>\int_a^b f(x)\,dx</code></td><td class="muted">integral (\, = thin space)</td></tr><tr><td><code>\lim_{x \to 0}</code></td><td class="muted">limit</td></tr><tr><td><code>\left( \dots \right)</code></td><td class="muted">auto-growing brackets</td></tr><tr><td><code>\begin{aligned} a &amp;= b \\ &amp;= c \end{aligned}</code></td><td class="muted">aligned equations (&amp; = align point)</td></tr><tr><td><code>\begin{cases} x &amp; x&gt;0 \\ 0 &amp; x \le 0 \end{cases}</code></td><td class="muted">piecewise</td></tr><tr><td><code>\begin{pmatrix} a &amp; b \\ c &amp; d \end{pmatrix}</code></td><td class="muted">matrix (b/v-matrix = [ ] / | |)</td></tr><tr><td><code>\text{words here}</code></td><td class="muted">normal text inside math</td></tr></table><h2 id="latex-symbols">LaTeX — symbols</h2><table class="ref-table"><tr><td><code>\alpha \beta \gamma \delta \theta \lambda \pi \sigma \omega</code></td><td class="muted">common Greek (lowercase)</td></tr><tr><td><code>\Gamma \Delta \Theta \Lambda \Pi \Sigma \Omega</code></td><td class="muted">capital Greek (capitalize the command)</td></tr><tr><td><code>\le \ge \ne \approx \equiv \sim</code></td><td class="muted">comparisons</td></tr><tr><td><code>\to \Rightarrow \Leftrightarrow \mapsto</code></td><td class="muted">arrows</td></tr><tr><td><code>\in \notin \subset \cup \cap \emptyset</code></td><td class="muted">sets</td></tr><tr><td><code>\forall \exists \neg \land \lor</code></td><td class="muted">logic</td></tr><tr><td><code>\infty \partial \nabla \pm \cdot \times \div</code></td><td class="muted">misc</td></tr><tr><td><code>\mathbb{R} \mathbb{Z} \mathbb{N} \mathcal{L} \mathbf{v}</code></td><td class="muted">letter styles</td></tr><tr><td><code>\cdots \vdots \ddots \dots</code></td><td class="muted">dots</td></tr><tr><td><code>\hat{x} \bar{x} \vec{v} \tilde{n} \dot{x}</code></td><td class="muted">accents</td></tr></table><h2 id="manim-mobjects">Manim — mobjects</h2><table class="ref-table"><tr><td><code>Circle(radius=1, color=BLUE, fill_opacity=0.5)</code></td><td class="muted">fill_opacity=0 by default!</td></tr><tr><td><code>Square(side_length=2) / Rectangle(width=4, height=2)</code></td><td class="muted">quads</td></tr><tr><td><code>Line(A, B) / Arrow(A, B) / Dot(point)</code></td><td class="muted">primitives</td></tr><tr><td><code>Polygon(p1, p2, p3, ...)</code></td><td class="muted">any shape from points</td></tr><tr><td><code>Text(&quot;hi&quot;, font_size=48, gradient=(BLUE, TEAL))</code></td><td class="muted">plain text (no LaTeX needed)</td></tr><tr><td><code>MathTex(r&quot;e^{i\pi}+1=0&quot;)</code></td><td class="muted">LaTeX math — always r&quot;...&quot;</td></tr><tr><td><code>Axes(x_range=[-4,4], y_range=[-2,2])</code></td><td class="muted">coordinate system</td></tr><tr><td><code>axes.plot(lambda x: np.sin(x), color=YELLOW)</code></td><td class="muted">function graph</td></tr><tr><td><code>axes.c2p(x, y)</code></td><td class="muted">math coords → screen point</td></tr><tr><td><code>VGroup(a, b, c).arrange(RIGHT, buff=0.5)</code></td><td class="muted">group + lay out</td></tr><tr><td><code>group.arrange_in_grid(rows=3, cols=3)</code></td><td class="muted">grid layout</td></tr><tr><td><code>DecimalNumber(0) / Integer(0)</code></td><td class="muted">animatable numbers</td></tr></table><h2 id="manim-animations">Manim — animations</h2><table class="ref-table"><tr><td><code>self.play(Create(shape))</code></td><td class="muted">draw outline</td></tr><tr><td><code>self.play(Write(text))</code></td><td class="muted">handwriting reveal</td></tr><tr><td><code>self.play(FadeIn(m, shift=UP), FadeOut(n))</code></td><td class="muted">fades (optionally directional)</td></tr><tr><td><code>self.play(GrowFromCenter(m))</code></td><td class="muted">scale-in</td></tr><tr><td><code>self.play(Transform(a, b))</code></td><td class="muted">morph a into b&#x27;s shape</td></tr><tr><td><code>self.play(TransformMatchingTex(eq1, eq2))</code></td><td class="muted">smart equation morph</td></tr><tr><td><code>self.play(m.animate.shift(RIGHT).set_color(RED))</code></td><td class="muted">.animate = animate any method chain</td></tr><tr><td><code>self.play(LaggedStart(*anims, lag_ratio=0.1))</code></td><td class="muted">staggered start</td></tr><tr><td><code>self.play(anim, run_time=3, rate_func=linear)</code></td><td class="muted">duration + speed curve</td></tr><tr><td><code>rate_functions: linear, smooth, there_and_back, ease_in_quad</code></td><td class="muted">common curves</td></tr><tr><td><code>self.play(Indicate(m)) / Circumscribe(m)</code></td><td class="muted">highlight attention</td></tr><tr><td><code>self.wait(1)</code></td><td class="muted">hold a frame</td></tr></table><h2 id="manim-positioning">Manim — positioning</h2><table class="ref-table"><tr><td><code>m.shift(UP * 2 + RIGHT)</code></td><td class="muted">move by offset</td></tr><tr><td><code>m.move_to(point_or_mobject)</code></td><td class="muted">move to absolute position</td></tr><tr><td><code>m.next_to(other, DOWN, buff=0.5)</code></td><td class="muted">relative placement</td></tr><tr><td><code>m.to_edge(UP) / m.to_corner(UR)</code></td><td class="muted">screen edges</td></tr><tr><td><code>m.align_to(other, LEFT)</code></td><td class="muted">align edges</td></tr><tr><td><code>m.scale(2) / m.rotate(PI/4) / m.flip()</code></td><td class="muted">transforms</td></tr><tr><td><code>m.get_center() / get_top() / get_corner(UR)</code></td><td class="muted">query points</td></tr><tr><td><code>constants: UP DOWN LEFT RIGHT UL UR DL DR ORIGIN</code></td><td class="muted">unit vectors</td></tr><tr><td><code>screen ≈ 14.2 × 8 units, origin at center</code></td><td class="muted">the canvas</td></tr></table><h2 id="manim-updaters">Manim — updaters</h2><table class="ref-table"><tr><td><code>t = ValueTracker(0)</code></td><td class="muted">animatable number</td></tr><tr><td><code>self.play(t.animate.set_value(10))</code></td><td class="muted">drive it</td></tr><tr><td><code>m.add_updater(lambda m: m.set_value(t.get_value()))</code></td><td class="muted">react every frame</td></tr><tr><td><code>m.add_updater(lambda m, dt: m.rotate(dt))</code></td><td class="muted">dt-updater: runs on wall time (even in wait)</td></tr><tr><td><code>line = always_redraw(lambda: Line(a.get_center(), b.get_center()))</code></td><td class="muted">rebuild each frame</td></tr><tr><td><code>m.clear_updaters()</code></td><td class="muted">stop reacting</td></tr></table><h2 id="manim-slides-x">manim-slides</h2><table class="ref-table"><tr><td><code>from manim_slides import Slide</code></td><td class="muted">the import</td></tr><tr><td><code>class Talk(Slide):</code></td><td class="muted">Slide instead of Scene</td></tr><tr><td><code>self.next_slide()</code></td><td class="muted">pause point</td></tr><tr><td><code>self.next_slide(loop=True)</code></td><td class="muted">loop this segment until advance</td></tr><tr><td><code>self.play(*[FadeOut(m) for m in self.mobjects])</code></td><td class="muted">wipe between sections</td></tr><tr><td><code>manim-slides render talk.py Talk</code></td><td class="muted">render</td></tr><tr><td><code>manim-slides present Talk</code></td><td class="muted">native GUI presenter</td></tr><tr><td><code>manim-slides convert --to html --offline Talk out.html</code></td><td class="muted">offline HTML deck</td></tr><tr><td><code>manim-slides convert --to pptx Talk out.pptx</code></td><td class="muted">PowerPoint export</td></tr><tr><td><code>hotkeys: → next · ← prev · F fullscreen · R replay · Q quit</code></td><td class="muted">in the GUI</td></tr></table><h2 id="terminal-recipes-x">Terminal recipes</h2><table class="ref-table"><tr><td><code>manim render -ql -p file.py Scene</code></td><td class="muted">fast 480p preview, play when done</td></tr><tr><td><code>manim render -qh file.py Scene</code></td><td class="muted">final 1080p60</td></tr><tr><td><code>-ql / -qm / -qh / -qp / -qk</code></td><td class="muted">480p15 / 720p30 / 1080p60 / 1440p60 / 4K</td></tr><tr><td><code>pip install manim &quot;manim-slides[pyside6]&quot;</code></td><td class="muted">the whole stack</td></tr><tr><td><code>pip install -U manim manim-slides</code></td><td class="muted">update</td></tr><tr><td><code>manim --version &amp;&amp; manim-slides --version</code></td><td class="muted">health check</td></tr></table>
+<script>
+(function(){
+var inp = document.getElementById("ref-filter");
+var count = document.getElementById("ref-count");
+var rows = [].slice.call(document.querySelectorAll(".ref-table tr"));
+var heads = [].slice.call(document.querySelectorAll("h2"));
+function apply() {
+  var q = inp.value.trim().toLowerCase();
+  var shown = 0;
+  rows.forEach(function (r) {
+    var hit = !q || r.textContent.toLowerCase().indexOf(q) >= 0;
+    r.style.display = hit ? "" : "none";
+    if (hit) shown++;
+  });
+  heads.forEach(function (hd) {
+    var t = hd.nextElementSibling;
+    if (t && t.classList.contains("ref-table")) {
+      var any = [].slice.call(t.rows).some(function (r) { return r.style.display !== "none"; });
+      hd.style.display = any ? "" : "none";
+      t.style.display = any ? "" : "none";
+    }
+  });
+  count.textContent = q ? shown + " matching entries" : rows.length + " entries";
+}
+inp.addEventListener("input", apply);
+apply();
+})();
+</script>
+
+<div class="pager">
+  <a href="capstone.html"><span class="dir">← Build</span>🏆 Capstone</a>
+  <a href="index.html" class="right"><span class="dir">Start</span>Home</a>
+</div>
+
+</main>
+<footer class="site">
+  <p>Manim Slides Academy — open source (MIT), <b>AI-generated</b> content, human-reviewed examples that all actually render.<br>
+  Works 100% offline · <a href="https://github.com/Alamin-H-M/manim-slides-academy/releases/latest/download/manim-slides-academy-offline.zip">Download the site as a ZIP</a> · No trackers, no cookies ·
+  <a href="https://github.com/Alamin-H-M/manim-slides-academy">Contribute on GitHub</a></p>
+</footer>
+</body>
+</html>
