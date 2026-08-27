@@ -198,7 +198,7 @@ next();
 
 <div class="pager">
   <a href="slides.html"><span class="dir">← Chapters</span>3 · manim-slides</a>
-  <a href="capstone.html" class="right"><span class="dir">Ready to build? →</span>🏆 Capstone</a>
+  <a href="reference.html" class="right"><span class="dir">Look things up →</span>📖 Reference</a>
 </div>
 """
     return page("practice.html", "Practice", body, katex=True,

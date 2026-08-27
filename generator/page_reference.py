@@ -183,7 +183,7 @@ apply();
 </script>
 
 <div class="pager">
-  <a href="capstone.html"><span class="dir">← Build</span>🏆 Capstone</a>
+  <a href="practice.html"><span class="dir">← Practice</span>🔁 Practice</a>
   <a href="index.html" class="right"><span class="dir">Start</span>Home</a>
 </div>
 """

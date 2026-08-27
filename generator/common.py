@@ -11,7 +11,6 @@ NAV = [
     ("manim.html", "2 · Manim"),
     ("slides.html", "3 · Slides"),
     ("practice.html", "🔁 Practice"),
-    ("capstone.html", "🏆 Capstone"),
     ("reference.html", "📖 Reference"),
 ]
 
@@ -172,20 +171,6 @@ def topic(n: int, key: str, title: str, intro: str, body: str, xp: int = 15) -> 
             f'<p class="lead">{intro}</p>{body}'
             f'<div class="topic-end"><label class="donebox"><input type="checkbox" data-key="{key}" data-xp="{xp}">'
             f' I finished topic {n} — mark done <span class="xp-tag">+{xp} XP</span></label></div>')
-
-
-def milestone(n: int, key: str, title: str, tag: str, xp: int = 30) -> str:
-    """Capstone milestone heading (checkbox comes separately via milestone_done)."""
-    register_box(key, xp)
-    return (f'<h2 id="{key}"><span class="tno">{n}</span>{title} '
-            f'<span class="muted small">({tag})</span></h2>')
-
-
-def milestone_done(n: int, key: str, xp: int = 30) -> str:
-    """End-of-milestone checkbox — placed after the work, not before it."""
-    return (f'<div class="topic-end"><label class="donebox">'
-            f'<input type="checkbox" data-key="{key}" data-xp="{xp}">'
-            f' Milestone {n} complete <span class="xp-tag">+{xp} XP</span></label></div>')
 
 
 def page(filename: str, title: str, body: str, katex: bool = False, desc: str = "") -> str:
