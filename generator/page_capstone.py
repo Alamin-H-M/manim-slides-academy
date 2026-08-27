@@ -1,4 +1,4 @@
-from common import page, pre, milestone, set_page
+from common import page, pre, milestone, milestone_done, set_page
 set_page("capstone.html")
 
 BODY = """
@@ -37,6 +37,7 @@ manim-slides present Pythagoras     # -> or convert to HTML, your choice""", "sh
 the title shrinking to the top edge. If yes — milestone 1 done. If the render fails on MathTex,
 revisit <a href="setup.html#latex">Setup §3</a> (LaTeX strategy B).</div>
 
+{M1_DONE}
 {M2}
 <p>Append before the final <code>next_slide()</code>. One line is missing — the label for side <code>b</code>.
 You've seen <code>next_to</code> with directions; fill the gap.</p>
@@ -57,6 +58,7 @@ You've seen <code>next_to</code> with directions; fill the gap.</p>
 """ + pre('''lb = MathTex("b").next_to(Line(A, B), DOWN)''') + """
 </div></details>
 
+{M2_DONE}
 {M3}
 <p>The classic visual: a square on each side, areas a², b², c². You get the recipe and the first
 square; build the other two yourself.</p>
@@ -95,6 +97,7 @@ square; build the other two yourself.</p>
 <p class="muted small">Your numbers may differ — if the squares sit roughly on their sides, you've won.
 This fiddliness is real Manim life.</p></div></details>
 
+{M3_DONE}
 {M4}
 <p>New segment: fade everything out, then tell the algebra story — the equation appears,
 the numbers substitute in, the result gets a box. Your tools: <code>MathTex</code>,
@@ -126,6 +129,7 @@ the numbers substitute in, the result gets a box. Your tools: <code>MathTex</cod
         self.next_slide()''') + """
 </div></details>
 
+{M4_DONE}
 {M5}
 <p>Alone now — you know everything you need:</p>
 <ol>
@@ -138,6 +142,7 @@ manim-slides convert --to pptx Pythagoras talk.pptx""", "shell") + """
 <li>Open <code>talk.html</code>, disconnect your WiFi, and present it start to finish. Out loud. Yes, really.</li>
 </ol>
 
+{M5_DONE}
 <div class="tip"><b>🎓 Done?</b> Then you have: written LaTeX inside animations, built and positioned
 mobjects, animated transforms, structured a deck with pauses and loops, and shipped offline HTML + PowerPoint.
 That is the complete workflow — there is no chapter 4 because there is nothing left to teach.
@@ -166,6 +171,12 @@ BODY = BODY.replace('{M2}', milestone(2, "cap-m2", "Milestone 2 — draw the tri
 BODY = BODY.replace('{M3}', milestone(3, "cap-m3", "Milestone 3 — the squares on the sides", "half scaffold", 35))
 BODY = BODY.replace('{M4}', milestone(4, "cap-m4", "Milestone 4 — the algebra, animated", "hints only", 40))
 BODY = BODY.replace('{M5}', milestone(5, "cap-m5", "Milestone 5 — ship it", "no scaffold", 50))
+
+BODY = BODY.replace('{M1_DONE}', milestone_done(1, "cap-m1", 25))
+BODY = BODY.replace('{M2_DONE}', milestone_done(2, "cap-m2", 30))
+BODY = BODY.replace('{M3_DONE}', milestone_done(3, "cap-m3", 35))
+BODY = BODY.replace('{M4_DONE}', milestone_done(4, "cap-m4", 40))
+BODY = BODY.replace('{M5_DONE}', milestone_done(5, "cap-m5", 50))
 
 def render():
     return page("capstone.html", "Capstone", BODY,

@@ -333,3 +333,7 @@ a.hud-bar:hover i{opacity:.8}
   .hud-inner{gap:8px;font-size:.75rem;padding:5px 12px}
   .hud-bar{min-width:80px}
 }
+/* end-of-topic finish line */
+.topic-end{margin:22px 0 34px;padding:10px 16px;border:1px dashed var(--line,#232a36);border-radius:10px;text-align:right}
+.topic-end .donebox{font-size:.92rem}
+.topic-end:has(input:checked){border-color:var(--accent2,#34d399);border-style:solid;background:color-mix(in srgb, var(--accent2, #34d399) 7%, transparent)}
