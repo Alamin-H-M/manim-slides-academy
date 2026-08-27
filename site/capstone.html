@@ -22,6 +22,8 @@
   <a class="logo" href="index.html">Manim Slides <b>Academy</b></a>
   <nav class="main"><a href="index.html">Home</a><a href="setup.html">Setup</a><a href="latex.html">1 · LaTeX</a><a href="manim.html">2 · Manim</a><a href="slides.html">3 · Slides</a><a href="practice.html">🔁 Practice</a><a href="capstone.html">🏆 Capstone</a><a href="reference.html">📖 Reference</a></nav>
 </div></header>
+<div id="game-hud" hidden></div>
+<script>window.MSA_COURSE=[{"k":"c-power","x":10,"t":"ch"},{"k":"ltx-what","x":15,"t":"box"},{"k":"c-sum","x":10,"t":"ch"},{"k":"ltx-symbols","x":15,"t":"box"},{"k":"c-integral","x":10,"t":"ch"},{"k":"ltx-structure","x":15,"t":"box"},{"k":"c-cases","x":10,"t":"ch"},{"k":"ltx-brackets","x":15,"t":"box"},{"k":"c-matrix","x":10,"t":"ch"},{"k":"ltx-matrices","x":15,"t":"box"},{"k":"c-final","x":10,"t":"ch"},{"k":"ltx-docs","x":15,"t":"box"},{"k":"qz-b3742a35","x":5,"t":"qz"},{"k":"qz-74ca9e1c","x":5,"t":"qz"},{"k":"qz-8245f7f9","x":5,"t":"qz"},{"k":"c-brace","x":10,"t":"ch"},{"k":"ltx-decor","x":20,"t":"box"},{"k":"c-partial","x":10,"t":"ch"},{"k":"ltx-calculus","x":20,"t":"box"},{"k":"c-color","x":10,"t":"ch"},{"k":"ltx-finetune","x":20,"t":"box"},{"k":"c-euler-id","x":10,"t":"ch"},{"k":"ltx-pro","x":25,"t":"box"},{"k":"mnm-scene","x":15,"t":"box"},{"k":"mnm-anim","x":15,"t":"box"},{"k":"mnm-pos","x":15,"t":"box"},{"k":"mnm-style","x":15,"t":"box"},{"k":"mnm-updaters","x":15,"t":"box"},{"k":"mnm-graphs","x":15,"t":"box"},{"k":"qz-8e95cb99","x":5,"t":"qz"},{"k":"qz-bfb368f4","x":5,"t":"qz"},{"k":"qz-725c88dd","x":5,"t":"qz"},{"k":"qz-5e843767","x":5,"t":"qz"},{"k":"mnm-tex-adv","x":20,"t":"box"},{"k":"qz-29914799","x":5,"t":"qz"},{"k":"mnm-timing","x":20,"t":"box"},{"k":"qz-b0df76a3","x":5,"t":"qz"},{"k":"mnm-camera","x":20,"t":"box"},{"k":"qz-66df76d2","x":5,"t":"qz"},{"k":"mnm-3d","x":25,"t":"box"},{"k":"qz-7122e9a1","x":5,"t":"qz"},{"k":"mnm-config","x":20,"t":"box"},{"k":"sld-first","x":15,"t":"box"},{"k":"sld-run","x":15,"t":"box"},{"k":"sld-craft","x":15,"t":"box"},{"k":"qz-c4294d88","x":5,"t":"qz"},{"k":"qz-a56ff1b2","x":5,"t":"qz"},{"k":"qz-65f60815","x":5,"t":"qz"},{"k":"qz-5367e498","x":5,"t":"qz"},{"k":"sld-advanced","x":20,"t":"box"},{"k":"qz-9ccf7c19","x":5,"t":"qz"},{"k":"sld-export","x":15,"t":"box"},{"k":"qz-f5e7bd5e","x":5,"t":"qz"},{"k":"sld-workflow","x":15,"t":"box"},{"k":"cap-m1","x":25,"t":"box"},{"k":"cap-m2","x":30,"t":"box"},{"k":"cap-m3","x":35,"t":"box"},{"k":"cap-m4","x":40,"t":"box"},{"k":"cap-m5","x":50,"t":"box"}];</script>
 <main>
 
 <h1>🏆 Capstone — build a real animated talk</h1>
@@ -36,7 +38,7 @@ complete partially-solved problems → solve alone. That's exactly the structure
 <b>Type everything by hand</b> — no copy-paste. Typing is where the learning happens; the copy
 buttons are for checking, not for skipping.</div>
 
-<h2 id="m1"><span class="tno">1</span>Milestone 1 — the skeleton <span class="muted small">(full worked example)</span></h2>
+<h2 id="cap-m1"><span class="tno">1</span>Milestone 1 — the skeleton <span class="muted small">(full worked example)</span><label class="donebox"><input type="checkbox" data-key="cap-m1" data-xp="25"> done <span class="xp-tag">+25 XP</span></label></h2>
 <p>Create <code>pythagoras.py</code>. Type this, render it, watch it. It's the whole presentation
 in miniature: one title slide that pauses.</p>
 <pre><code><span class="tok-k">from</span> manim <span class="tok-k">import</span> *
@@ -59,7 +61,7 @@ in miniature: one title slide that pauses.</p>
 the title shrinking to the top edge. If yes — milestone 1 done. If the render fails on MathTex,
 revisit <a href="setup.html#latex">Setup §3</a> (LaTeX strategy B).</div>
 
-<h2 id="m2"><span class="tno">2</span>Milestone 2 — draw the triangle <span class="muted small">(worked example, one gap)</span></h2>
+<h2 id="cap-m2"><span class="tno">2</span>Milestone 2 — draw the triangle <span class="muted small">(worked example, one gap)</span><label class="donebox"><input type="checkbox" data-key="cap-m2" data-xp="30"> done <span class="xp-tag">+30 XP</span></label></h2>
 <p>Append before the final <code>next_slide()</code>. One line is missing — the label for side <code>b</code>.
 You've seen <code>next_to</code> with directions; fill the gap.</p>
 <pre><code>        <span class="tok-c"># right triangle: legs a=3, b=4 -&gt; hypotenuse c=5</span>
@@ -79,7 +81,7 @@ You've seen <code>next_to</code> with directions; fill the gap.</p>
 <pre><code>lb = <span class="tok-cls">MathTex</span>(<span class="tok-s">"b"</span>).next_to(<span class="tok-cls">Line</span>(A, B), DOWN)</code></pre>
 </div></details>
 
-<h2 id="m3"><span class="tno">3</span>Milestone 3 — the squares on the sides <span class="muted small">(half scaffold)</span></h2>
+<h2 id="cap-m3"><span class="tno">3</span>Milestone 3 — the squares on the sides <span class="muted small">(half scaffold)</span><label class="donebox"><input type="checkbox" data-key="cap-m3" data-xp="35"> done <span class="xp-tag">+35 XP</span></label></h2>
 <p>The classic visual: a square on each side, areas a², b², c². You get the recipe and the first
 square; build the other two yourself.</p>
 <pre><code>        <span class="tok-c"># recipe for a square attached to an edge P-&gt;Q:</span>
@@ -117,7 +119,7 @@ square; build the other two yourself.</p>
 <p class="muted small">Your numbers may differ — if the squares sit roughly on their sides, you've won.
 This fiddliness is real Manim life.</p></div></details>
 
-<h2 id="m4"><span class="tno">4</span>Milestone 4 — the algebra, animated <span class="muted small">(hints only)</span></h2>
+<h2 id="cap-m4"><span class="tno">4</span>Milestone 4 — the algebra, animated <span class="muted small">(hints only)</span><label class="donebox"><input type="checkbox" data-key="cap-m4" data-xp="40"> done <span class="xp-tag">+40 XP</span></label></h2>
 <p>New segment: fade everything out, then tell the algebra story — the equation appears,
 the numbers substitute in, the result gets a box. Your tools: <code>MathTex</code>,
 <code>TransformMatchingTex</code> (or plain <code>Transform</code>), <code>SurroundingRectangle</code>, <code>Indicate</code>.</p>
@@ -148,7 +150,7 @@ the numbers substitute in, the result gets a box. Your tools: <code>MathTex</cod
         <span class="tok-k">self</span>.next_slide()</code></pre>
 </div></details>
 
-<h2 id="m5"><span class="tno">5</span>Milestone 5 — ship it <span class="muted small">(no scaffold)</span></h2>
+<h2 id="cap-m5"><span class="tno">5</span>Milestone 5 — ship it <span class="muted small">(no scaffold)</span><label class="donebox"><input type="checkbox" data-key="cap-m5" data-xp="50"> done <span class="xp-tag">+50 XP</span></label></h2>
 <p>Alone now — you know everything you need:</p>
 <ol>
 <li>Add a <b>looping</b> end slide: "Thanks! Questions?" with some ambient motion (<code>next_slide(loop=True)</code>… you know this).</li>

@@ -216,6 +216,92 @@ exercise("Final project: build a 5-slide deck teaching the quadratic formula —
 #   manim-slides convert --to html --offline QuadraticTalk talk.html
 #   manim-slides convert --to pptx QuadraticTalk talk.pptx'''))
 
+T4 = topic(4, "sld-advanced", "Canvas, wipes, zooms & speaker notes \u2014 the pro deck", """
+Four upgrades in one deck (open it \u2014 it's real): a <b>canvas</b> header that survives slide wipes,
+<code>wipe()</code> and <code>zoom()</code> transitions, and <b>speaker notes</b> only you see in
+presenter view.""",
+deck("ProDeck", '''class ProDeck(Slide):
+    def construct(self):
+        header = Text("Advanced deck patterns",
+                      font_size=32).to_edge(UP)
+        self.add_to_canvas(header=header)  # survives wipes
+        self.play(FadeIn(header))
+        self.next_slide(
+            notes="Canvas keeps the header everywhere.")
+
+        p1 = Text("wipe() slides content sideways",
+                  font_size=30, color=TEAL)
+        self.play(FadeIn(p1))
+        self.next_slide(notes="Demonstrate wipe.")
+
+        p2 = Text("like a real slide change",
+                  font_size=30, color=YELLOW)
+        self.wipe(self.mobjects_without_canvas, p2)
+        self.next_slide(notes="Demonstrate zoom.")
+
+        p3 = Text("zoom() scales the next idea in",
+                  font_size=30, color=GREEN)
+        self.zoom(self.mobjects_without_canvas, p3)
+        self.next_slide(notes="Wrap up.")
+        self.play(*[FadeOut(m) for m in self.mobjects])''',
+    "add_to_canvas pins mobjects across transitions; mobjects_without_canvas is everything else. notes= appears in presenter view (press S in HTML decks).") +
+quiz("Your section header must stay visible while everything else wipes away. The intended tool?",
+     [("self.add_to_canvas(header=header), then wipe self.mobjects_without_canvas", True),
+      ("Re-create the header on every slide", False),
+      ("Never use wipe()", False)],
+     "that is literally what the canvas is for \u2014 persistent chrome, transient content."),
+xp=20)
+
+T5 = topic(5, "sld-export", "Every export target that matters", """
+One rendered deck, four audiences: a browser tab for you, a single HTML file for email,
+a PowerPoint for the conference laptop, a PDF for the handout.""",
+pre('''# 1. live presenting (opens a window, arrow keys advance)
+manim-slides present MyTalk
+
+# 2. one self-contained HTML file \u2014 email it, open anywhere, no install
+manim-slides convert --to html --offline --one-file MyTalk talk.html
+
+# 3. PowerPoint \u2014 each slide segment becomes an auto-playing video
+manim-slides convert --to pptx MyTalk talk.pptx
+
+# 4. PDF handout \u2014 one frame per slide
+manim-slides convert --to pdf MyTalk talk.pdf''', "shell") +
+'''<div class="note"><b>Which HTML flavor?</b> <code>--offline</code> bundles reveal.js locally
+(folder + assets dir); adding <code>--one-file</code> inlines <i>everything</i> into a single
+.html \u2014 biggest file, zero dependencies, survives email attachments. That single-file trick is
+exactly how the decks embedded in this site were made portable.</div>''' +
+quiz("The conference PC has PowerPoint, no Python, no internet. Which export do you bring?",
+     [("manim-slides convert --to pptx MyTalk talk.pptx", True),
+      ("manim-slides present MyTalk", False),
+      ("Just the .py file", False)],
+     "pptx embeds the videos; present-mode needs Python installed on the machine."),
+xp=15)
+
+T6 = topic(6, "sld-workflow", "The real-world workflow, start to finish", """
+How the pieces fit on an actual working day \u2014 the exact loop the Manim Slides Preview VS Code
+extension automates for you (\u25b6 renders + converts; Ctrl+S keeps the .pptx fresh).""",
+pre('''# the loop you will actually live in:
+# 1. edit talk.py          (VS Code)
+# 2. render draft          manim render -ql talk.py MyTalk
+# 3. preview instantly     manim-slides present MyTalk
+# 4. repeat 1-3 until happy
+# 5. final quality         manim render -qh talk.py MyTalk
+# 6. ship both formats     manim-slides convert --to pptx MyTalk talk.pptx
+#                          manim-slides convert --to html --offline --one-file MyTalk talk.html''', "shell") +
+'''<div class="note warn"><b>The three mistakes everyone makes once</b><br>
+1\ufe0f\u20e3 Renaming the scene class and wondering where the old slides went \u2014 slide data is stored
+<i>per class name</i>; re-render after renaming.<br>
+2\ufe0f\u20e3 Forgetting to re-render before convert \u2014 convert uses the <i>last rendered</i> videos, not
+your latest code.<br>
+3\ufe0f\u20e3 Paths with spaces: always quote \u2014 <code>"d:\\My Talks\\talk.py"</code> \u2014 or the CLI sees
+two arguments. (Your project folder <i>d:\\Alamin Maruf\\...</i> qualifies!)</div>''' +
+quiz("You edited talk.py, then ran convert \u2014 but the pptx shows the OLD animation. Why?",
+     [("convert packages the last RENDER; you must re-render first", True),
+      ("pptx export caches forever", False),
+      ("PowerPoint can't be updated", False)],
+     "render produces the videos, convert only packages them \u2014 the ▶ button in the VS Code extension does both, in order, every time."),
+xp=15)
+
 PRETEST = pretest([
     ("Guess: what's the minimum change to turn an animation into a presentation?", "Inherit from <code>Slide</code> instead of <code>Scene</code> and mark pauses with <code>next_slide()</code>. That's genuinely all — Topic 1."),
     ("A talk venue has no WiFi. What could go wrong with an HTML deck?", "If it loads its player from a CDN, you get a blank screen. The <code>--offline</code> flag bundles everything — Topic 2."),
@@ -228,8 +314,10 @@ BODY = f"""
 to advance, exactly like your audience would.</p>
 <div class="toc"><b>Topics</b>
 <a href="#sld-first">1 Scene → Slide</a><a href="#sld-run">2 Render, present, export</a>
-<a href="#sld-craft">3 Slide craft</a><a href="#sld-ex">✅ Self-exam</a></div>
-{PRETEST}{T1}{T2}{T3}{EXERCISES}
+<a href="#sld-craft">3 Slide craft</a><a href="#sld-advanced">4 Canvas &amp; transitions</a>
+<a href="#sld-export">5 Exports</a><a href="#sld-workflow">6 Real workflow</a>
+<a href="#sld-ex">✅ Self-exam</a></div>
+{PRETEST}{T1}{T2}{T3}{T4}{T5}{T6}{EXERCISES}
 <div class="pager">
   <a href="manim.html"><span class="dir">← Previous</span>2 · Manim</a>
   <a href="index.html" class="right"><span class="dir">Finish 🎉</span>Back to Home</a>

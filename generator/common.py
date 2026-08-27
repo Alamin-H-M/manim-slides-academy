@@ -130,11 +130,14 @@ def deck(name: str, code: str, note: str = "") -> str:
 
 
 def quiz(question: str, options, why: str) -> str:
+    import hashlib
+    qkey = "qz-" + hashlib.md5(question.encode()).hexdigest()[:8]
+    register_box(qkey, 5, "qz")
     opts = "".join(
-        f'<label{" data-right" if right else ""}><input type="radio" name="q{abs(hash(question)) % 99999}">{esc(t)}</label>'
+        f'<label{" data-right" if right else ""}><input type="radio" name="{qkey}">{esc(t)}</label>'
         for t, right in options)
     return (f'<div class="exercise"><div class="q">{question}</div>'
-            f'<div class="quiz" data-why="{esc(why)}">{opts}<div class="verdict"></div></div></div>')
+            f'<div class="quiz" data-key="{qkey}" data-why="{esc(why)}">{opts}<div class="verdict"></div></div></div>')
 
 
 def exercise(question: str, answer_html: str) -> str:
@@ -143,16 +146,39 @@ def exercise(question: str, answer_html: str) -> str:
             f'<div class="inner">{answer_html}</div></details></div>')
 
 
-def topic(n: int, key: str, title: str, intro: str, body: str) -> str:
+# Every checkable unit of the course registers here (during module import).
+# page() then embeds the full list so any page can compute overall progress %.
+TOPIC_REGISTRY = []  # list of (key, xp, kind)  kind: box | ch | qz
+
+
+def register_box(key: str, xp: int, kind: str = "box") -> None:
+    if key not in [k for k, _, _ in TOPIC_REGISTRY]:
+        TOPIC_REGISTRY.append((key, xp, kind))
+
+
+def topic(n: int, key: str, title: str, intro: str, body: str, xp: int = 15) -> str:
+    register_box(key, xp)
     return (f'<h2 id="{key}"><span class="tno">{n}</span>{title}'
-            f'<label class="donebox"><input type="checkbox" data-key="{key}"> mark done</label></h2>'
+            f'<label class="donebox"><input type="checkbox" data-key="{key}" data-xp="{xp}"> mark done'
+            f' <span class="xp-tag">+{xp} XP</span></label></h2>'
             f'<p class="lead">{intro}</p>{body}')
+
+
+def milestone(n: int, key: str, title: str, tag: str, xp: int = 30) -> str:
+    """Capstone milestone heading with its own XP donebox."""
+    register_box(key, xp)
+    return (f'<h2 id="{key}"><span class="tno">{n}</span>{title} <span class="muted small">({tag})</span>'
+            f'<label class="donebox"><input type="checkbox" data-key="{key}" data-xp="{xp}"> done'
+            f' <span class="xp-tag">+{xp} XP</span></label></h2>')
 
 
 def page(filename: str, title: str, body: str, katex: bool = False, desc: str = "") -> str:
     desc = desc or ("Free offline course: learn LaTeX, Manim and manim-slides from zero "
                     "with live playgrounds, rendered animations and interactive slide decks.")
     esc_title = esc(title)
+    import json as _json
+    course_json = _json.dumps([{"k": k, "x": x, "t": t} for k, x, t in TOPIC_REGISTRY],
+                              separators=(",", ":"))
     nav = "".join(f'<a href="{h}">{t}</a>' for h, t in NAV)
     katex_head = ('<link rel="stylesheet" href="assets/katex/katex.min.css">'
                   '<script defer src="assets/katex/katex.min.js"></script>') if katex else ""
@@ -180,6 +206,8 @@ def page(filename: str, title: str, body: str, katex: bool = False, desc: str = 
   <a class="logo" href="index.html">Manim Slides <b>Academy</b></a>
   <nav class="main">{nav}</nav>
 </div></header>
+<div id="game-hud" hidden></div>
+<script>window.MSA_COURSE={course_json};</script>
 <main>
 {body}
 </main>
@@ -195,6 +223,7 @@ def page(filename: str, title: str, body: str, katex: bool = False, desc: str = 
 def challenge(key: str, prompt: str, target: str, hint: str = "") -> str:
     """'Write this in LaTeX' game: shows rendered math, user types LaTeX,
     live-checks whether their rendering matches the goal exactly."""
+    register_box(key, 10, "ch")
     return (f'<div class="tex-challenge" data-key="{key}" data-target="{esc(target)}" data-hint="{esc(hint)}">'
             f'<div class="ch-q">🎯 {prompt}</div>'
             f'<div class="target">{esc(target)}</div>'

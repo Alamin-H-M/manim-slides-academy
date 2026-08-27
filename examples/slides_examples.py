@@ -72,3 +72,26 @@ class MathLecture(Slide):
         self.play(x.animate.set_value(1.8), run_time=3, rate_func=linear)
         self.next_slide()
         self.play(*[FadeOut(m) for m in [title, definition, axes, curve, tangent]])
+
+
+class ProDeck(Slide):
+    """Advanced patterns: canvas (persistent header), wipe & zoom transitions,
+    speaker notes on every slide."""
+    def construct(self):
+        header = Text("Advanced deck patterns", font_size=32).to_edge(UP)
+        self.add_to_canvas(header=header)          # survives wipes!
+        self.play(FadeIn(header))
+        self.next_slide(notes="Canvas keeps the header on every slide.")
+
+        p1 = Text("wipe() slides content sideways", font_size=30, color=TEAL)
+        self.play(FadeIn(p1))
+        self.next_slide(notes="Demonstrate wipe: old leaves left, new enters right.")
+
+        p2 = Text("like a real slide change", font_size=30, color=YELLOW)
+        self.wipe(self.mobjects_without_canvas, p2)
+        self.next_slide(notes="Demonstrate zoom: focus attention by scaling in.")
+
+        p3 = Text("zoom() scales the next idea in", font_size=30, color=GREEN)
+        self.zoom(self.mobjects_without_canvas, p3)
+        self.next_slide(notes="Wrap up — fade everything including canvas.")
+        self.play(*[FadeOut(m) for m in self.mobjects])

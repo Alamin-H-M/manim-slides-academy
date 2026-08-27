@@ -1,4 +1,4 @@
-from common import page, pre
+from common import page, pre, milestone
 
 BODY = """
 <h1>🏆 Capstone — build a real animated talk</h1>
@@ -13,7 +13,7 @@ complete partially-solved problems → solve alone. That's exactly the structure
 <b>Type everything by hand</b> — no copy-paste. Typing is where the learning happens; the copy
 buttons are for checking, not for skipping.</div>
 
-<h2 id="m1"><span class="tno">1</span>Milestone 1 — the skeleton <span class="muted small">(full worked example)</span></h2>
+{M1}
 <p>Create <code>pythagoras.py</code>. Type this, render it, watch it. It's the whole presentation
 in miniature: one title slide that pauses.</p>
 """ + pre('''from manim import *
@@ -36,7 +36,7 @@ manim-slides present Pythagoras     # -> or convert to HTML, your choice""", "sh
 the title shrinking to the top edge. If yes — milestone 1 done. If the render fails on MathTex,
 revisit <a href="setup.html#latex">Setup §3</a> (LaTeX strategy B).</div>
 
-<h2 id="m2"><span class="tno">2</span>Milestone 2 — draw the triangle <span class="muted small">(worked example, one gap)</span></h2>
+{M2}
 <p>Append before the final <code>next_slide()</code>. One line is missing — the label for side <code>b</code>.
 You've seen <code>next_to</code> with directions; fill the gap.</p>
 """ + pre('''        # right triangle: legs a=3, b=4 -> hypotenuse c=5
@@ -56,7 +56,7 @@ You've seen <code>next_to</code> with directions; fill the gap.</p>
 """ + pre('''lb = MathTex("b").next_to(Line(A, B), DOWN)''') + """
 </div></details>
 
-<h2 id="m3"><span class="tno">3</span>Milestone 3 — the squares on the sides <span class="muted small">(half scaffold)</span></h2>
+{M3}
 <p>The classic visual: a square on each side, areas a², b², c². You get the recipe and the first
 square; build the other two yourself.</p>
 """ + pre('''        # recipe for a square attached to an edge P->Q:
@@ -94,7 +94,7 @@ square; build the other two yourself.</p>
 <p class="muted small">Your numbers may differ — if the squares sit roughly on their sides, you've won.
 This fiddliness is real Manim life.</p></div></details>
 
-<h2 id="m4"><span class="tno">4</span>Milestone 4 — the algebra, animated <span class="muted small">(hints only)</span></h2>
+{M4}
 <p>New segment: fade everything out, then tell the algebra story — the equation appears,
 the numbers substitute in, the result gets a box. Your tools: <code>MathTex</code>,
 <code>TransformMatchingTex</code> (or plain <code>Transform</code>), <code>SurroundingRectangle</code>, <code>Indicate</code>.</p>
@@ -125,7 +125,7 @@ the numbers substitute in, the result gets a box. Your tools: <code>MathTex</cod
         self.next_slide()''') + """
 </div></details>
 
-<h2 id="m5"><span class="tno">5</span>Milestone 5 — ship it <span class="muted small">(no scaffold)</span></h2>
+{M5}
 <p>Alone now — you know everything you need:</p>
 <ol>
 <li>Add a <b>looping</b> end slide: "Thanks! Questions?" with some ambient motion (<code>next_slide(loop=True)</code>… you know this).</li>
@@ -158,6 +158,13 @@ The <a href="reference.html">Reference</a> is your companion from here; the
 </div>
 """
 
+
+# substitute milestone headings (BODY is a plain string; code samples contain braces)
+BODY = BODY.replace('{M1}', milestone(1, "cap-m1", "Milestone 1 — the skeleton", "full worked example", 25))
+BODY = BODY.replace('{M2}', milestone(2, "cap-m2", "Milestone 2 — draw the triangle", "worked example, one gap", 30))
+BODY = BODY.replace('{M3}', milestone(3, "cap-m3", "Milestone 3 — the squares on the sides", "half scaffold", 35))
+BODY = BODY.replace('{M4}', milestone(4, "cap-m4", "Milestone 4 — the algebra, animated", "hints only", 40))
+BODY = BODY.replace('{M5}', milestone(5, "cap-m5", "Milestone 5 — ship it", "no scaffold", 50))
 
 def render():
     return page("capstone.html", "Capstone", BODY,

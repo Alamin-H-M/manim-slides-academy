@@ -26,19 +26,20 @@ BODY = """
   </div>
   <div class="card">
     <h3>1 · LaTeX</h3>
-    <p>The language of mathematical writing. 6 topics, every example is a <b>live playground</b> —
-    edit the code, watch the math re-render instantly.</p>
+    <p>The language of mathematical writing. <b>10 topics</b>, from first symbol to Maxwell's
+    equations — every example is a <b>live playground</b>, every topic ends with a
+    “your turn to write” challenge.</p>
     <a class="go" href="latex.html">Start LaTeX →</a>
   </div>
   <div class="card">
     <h3>2 · Manim</h3>
-    <p>Programmatic animation. 6 topics, 24 <b>real rendered animations</b> next to the exact
-    code that produced them.</p>
+    <p>Programmatic animation. <b>11 topics, 32 real rendered animations</b> — from your first
+    circle to camera work, 3D surfaces and production rendering flags.</p>
     <a class="go" href="manim.html">Start Manim →</a>
   </div>
   <div class="card">
     <h3>🔁 Practice</h3>
-    <p>36 spaced-repetition flashcards across all three domains. 5 minutes a day —
+    <p>49 spaced-repetition flashcards across all three domains. 5 minutes a day —
     the single most evidence-backed way to make it stick.</p>
     <a class="go" href="practice.html">Review today's cards →</a>
   </div>
@@ -56,8 +57,8 @@ BODY = """
   </div>
   <div class="card">
     <h3>3 · manim-slides</h3>
-    <p>Turn animations into presentations. 3 topics with <b>click-through interactive decks</b>
-    embedded in the page.</p>
+    <p>Turn animations into presentations. <b>6 topics</b> with click-through interactive decks —
+    up to canvas headers, wipe/zoom transitions, speaker notes and every export target.</p>
     <a class="go" href="slides.html">Start manim-slides →</a>
   </div>
 </div>
@@ -70,15 +71,40 @@ BODY = """
   <tr><td><b>2 easy → 2 harder</b></td><td>Every topic has two gentle examples, then two that stretch the same idea further. You always know which is which — look for the <span style="color:#4ade80">EASY</span> / <span style="color:#fbbf24">LEVEL UP</span> badge.</td></tr>
   <tr><td><b>Do, don't just read</b></td><td>LaTeX examples are editable live. Manim examples show the real video. Slide examples are decks you click through yourself.</td></tr>
   <tr><td><b>Test yourself</b></td><td>Every chapter ends with self-check exercises: quizzes that respond instantly, and open problems with hidden solutions.</td></tr>
-  <tr><td><b>Track progress</b></td><td>Tick "mark done" on each topic — it's remembered next time you open the site (stored only in your browser).</td></tr>
+  <tr><td><b>Track progress</b></td><td>The HUD on every page: XP, level, daily goal, 🔥 streak and overall course % — all stored only in your browser.</td></tr>
 </table>
 
+
+<h2>🎮 XP, levels, streaks — the game layer</h2>
+<p class="lead">Everything you do earns (or costs) XP, stored only in your browser. The bar at the very
+top of every page is your scoreboard.</p>
+<table>
+  <tr><th>Action</th><th>XP</th></tr>
+  <tr><td>Finish a topic (tick “mark done”)</td><td style="color:var(--accent2)"><b>+15 to +25</b></td></tr>
+  <tr><td>Solve a “write this in LaTeX” challenge</td><td style="color:var(--accent2)"><b>+10</b></td></tr>
+  <tr><td>Answer a quiz correctly (first time)</td><td style="color:var(--accent2)"><b>+5</b></td></tr>
+  <tr><td>Remember a practice flashcard</td><td style="color:var(--accent2)"><b>+3</b> (every day — reviewing IS the work)</td></tr>
+  <tr><td>Complete a capstone milestone</td><td style="color:var(--accent2)"><b>+25 to +50</b></td></tr>
+  <tr><td>Wrong quiz answer</td><td style="color:var(--danger)"><b>−2</b></td></tr>
+  <tr><td>Forget a flashcard</td><td style="color:var(--danger)"><b>−1</b></td></tr>
+  <tr><td>Give up on a challenge (“show solution”)</td><td style="color:var(--danger)"><b>−5</b></td></tr>
+</table>
+<p><b>🎯 Daily minimum: 30 XP.</b> Hit it and the day counts toward your <b>🔥 streak</b> — miss a day
+and the streak resets. 30 XP is deliberately small: ten flashcards, or one topic — about 10 minutes.
+Consistency beats bingeing; that is the entire science of spaced practice in one rule.</p>
+<p><b>Levels</b> climb from <i>Newcomer</i> through <i>Formula Wrangler</i> and <i>Scene Director</i> to
+<i>Academy Legend</i> (1400 XP). The green bar shows your <b>course progress %</b> — all 59 trackable
+items across every chapter, challenge, quiz and milestone. 80% completed means exactly that.</p>
+<p class="muted small">Anti-cheat, sort of: each topic/challenge/quiz pays out once ever. Flashcard XP repeats
+daily because re-reviewing genuinely is the work. Un-ticking a topic takes its XP back. Everything lives in
+localStorage — clear your browser data and your legend dies with it, so export your streak bragging
+rights via screenshot.</p>
 <h2>The path — a complete learning system</h2>
 <p class="lead">This is not just reading material. It's a full loop based on how memory actually works:
 <b>guess first</b> (pretests) → <b>learn by doing</b> (chapters) → <b>build for real</b> (capstone) →
 <b>keep it forever</b> (spaced practice) → <b>look things up</b> (reference).</p>
 <pre><code>  Setup ──▶ LaTeX ──▶ Manim ──▶ manim-slides ──▶ 🏆 Capstone project
- ~20 min    ~2 h      ~3 h        ~1.5 h            one afternoon
+ ~20 min    ~4 h      ~6 h        ~2.5 h            one afternoon
                                                         │
               🔁 Practice (5 min/day, spaced cards) ◀───┘──▶ 📖 Reference (forever)</code></pre>
 

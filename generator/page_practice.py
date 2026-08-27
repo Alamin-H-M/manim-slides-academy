@@ -47,6 +47,20 @@ CARDS = [
     {"d": "Slides", "t": "qa", "q": "Wipe everything between sections — the one-liner?", "a": "<code>self.play(*[FadeOut(m) for m in self.mobjects])</code>"},
     {"d": "Slides", "t": "qa", "q": "Render + convert commands for deck.py, scene Talk, offline HTML?", "a": "<pre>manim-slides render deck.py Talk\nmanim-slides convert --to html --offline Talk out.html</pre>"},
     {"d": "Slides", "t": "qa", "q": "Presenter hotkeys in the native GUI?", "a": "<kbd>→</kbd>/<kbd>Space</kbd> next · <kbd>←</kbd> prev · <kbd>F</kbd> fullscreen · <kbd>R</kbd> replay · <kbd>Q</kbd> quit."},
+    # ---- new advanced-topic cards ----
+    {"d": "LaTeX", "t": "latex", "f": r"\vec{v} \cdot \hat{n}", "q": "Write the LaTeX for this:", "a": r"\vec{v} \cdot \hat{n}"},
+    {"d": "LaTeX", "t": "latex", "f": r"\underbrace{a + b}_{\text{sum}}", "q": "Write the LaTeX for this:", "a": r"\underbrace{a + b}_{\text{sum}}"},
+    {"d": "LaTeX", "t": "latex", "f": r"\frac{\partial f}{\partial x}", "q": "Write the LaTeX for this:", "a": r"\frac{\partial f}{\partial x}"},
+    {"d": "LaTeX", "t": "latex", "f": r"\oint_C \vec{F} \cdot d\vec{r}", "q": "Write the LaTeX for this:", "a": r"\oint_C \vec{F} \cdot d\vec{r}"},
+    {"d": "LaTeX", "t": "qa", "q": "Thin space vs wide space in math mode?", "a": "<code>\\,</code> is thin (before dx), <code>\\quad</code> is wide, <code>\\qquad</code> double. <code>\\!</code> is negative."},
+    {"d": "Manim", "t": "qa", "q": "Morph <code>a²+b²=c²</code> into <code>c²=a²+b²</code> with terms flying to their new spots. Which animation?", "a": "<code>TransformMatchingTex(eq1, eq2)</code> — split each MathTex into per-term string arguments first."},
+    {"d": "Manim", "t": "qa", "q": "Make 12 dots appear one-after-another with overlap. Which wrapper?", "a": "<code>LaggedStart(*[GrowFromCenter(d) for d in dots], lag_ratio=0.15)</code>"},
+    {"d": "Manim", "t": "qa", "q": "Which Scene subclass lets you zoom & pan the viewport, and what do you animate?", "a": "<code>MovingCameraScene</code>; animate <code>self.camera.frame</code> (scale = zoom, move_to = pan, save_state/Restore to return)."},
+    {"d": "Manim", "t": "qa", "q": "In a ThreeDScene, what do phi and theta control?", "a": "<code>phi</code> = tilt down from vertical, <code>theta</code> = spin around the z-axis: <code>self.set_camera_orientation(phi=70*DEGREES, theta=-45*DEGREES)</code>"},
+    {"d": "Manim", "t": "qa", "q": "Render ONLY the last animation of a long scene while polishing it?", "a": "<code>manim render -ql -n -1 scene.py MyScene</code>"},
+    {"d": "Slides", "t": "qa", "q": "Keep a header visible across wipe() transitions. What's the feature called?", "a": "The <b>canvas</b>: <code>self.add_to_canvas(header=header)</code>, then wipe <code>self.mobjects_without_canvas</code>."},
+    {"d": "Slides", "t": "qa", "q": "Export one self-contained HTML file that works with zero installs?", "a": "<code>manim-slides convert --to html --offline --one-file MyTalk talk.html</code>"},
+    {"d": "Slides", "t": "qa", "q": "You edited the .py and converted, but the .pptx shows old animations. Why?", "a": "convert packages the <b>last render</b> — re-render first (the ▶ button in the VS Code extension does both)."},
 ]
 
 import json
@@ -59,7 +73,7 @@ def render():
 <p class="lead">This is the part most courses skip, and it's the most effective thing on this site.
 Two findings dominate learning research: <b>testing yourself beats re-reading</b> (retrieval practice)
 and <b>short sessions spread over days beat one long session</b> (spacing). This page does both for you:
-36 cards across all three chapters, interleaved, scheduled with a Leitner system that hides
+49 cards across all three chapters, interleaved, scheduled with a Leitner system that hides
 what you know and repeats what you miss. All progress stays in your browser.</p>
 
 <div class="note"><b>How to use it</b>
@@ -172,6 +186,8 @@ function grade(idx, ok) {
   c.box = ok ? Math.min(c.box + 1, 4) : 0;
   c.due = Date.now() + (ok ? INTERVALS[c.box] : DAY);
   state[idx] = c; save();
+  // XP: +3 per remembered card (repeatable — reviewing IS the work), -1 per miss
+  window.dispatchEvent(new CustomEvent("msa-xp", { detail: { delta: ok ? 3 : -1 } }));
   queue.shift();
   next();
 }

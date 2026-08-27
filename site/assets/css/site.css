@@ -291,3 +291,25 @@ footer.site a { color: var(--muted); text-decoration: underline; }
   border-radius: 999px; padding: 2px 12px; font-size: 0.78rem; font-weight: 700;
   margin-left: 8px; vertical-align: middle;
 }
+
+/* ===== game HUD ===== */
+#game-hud{position:sticky;top:0;z-index:50;background:var(--bg2,#11151d);border-bottom:1px solid var(--line,#232a36)}
+.hud-inner{max-width:1060px;margin:0 auto;padding:6px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:.82rem}
+.hud-lvl{font-weight:700;color:var(--accent,#4cc2ff);white-space:nowrap}
+.hud-bar{position:relative;flex:1 1 120px;min-width:110px;max-width:260px;height:16px;background:var(--line,#232a36);border-radius:8px;overflow:hidden}
+.hud-bar i{position:absolute;inset:0;width:0;background:var(--accent,#4cc2ff);opacity:.55;transition:width .4s}
+.hud-bar.course i{background:var(--accent2,#3ddc84)}
+.hud-bar b{position:relative;display:block;text-align:center;line-height:16px;font-size:.72rem;font-weight:600}
+.hud-goal{white-space:nowrap;color:var(--muted,#8a94a6)}
+.hud-goal.met{color:var(--accent2,#3ddc84);font-weight:700}
+.hud-mini{display:inline-block;vertical-align:middle;margin-left:6px;width:44px;height:7px;background:var(--line,#232a36);border-radius:4px;overflow:hidden;position:relative}
+.hud-mini i{position:absolute;inset:0;width:0;background:var(--accent2,#3ddc84);transition:width .4s}
+.hud-streak{white-space:nowrap;font-weight:700;color:var(--warn,#ffb454)}
+.xp-tag{font-size:.68rem;font-weight:700;color:var(--accent2,#3ddc84);border:1px solid var(--accent2,#3ddc84);border-radius:8px;padding:0 6px;margin-left:6px;opacity:.85}
+.xp-toast{position:fixed;right:18px;bottom:18px;z-index:99;padding:8px 14px;border-radius:10px;font-weight:700;font-size:.9rem;
+  background:var(--bg2,#11151d);border:1px solid var(--accent2,#3ddc84);color:var(--accent2,#3ddc84);
+  opacity:0;transform:translateY(12px);transition:opacity .25s,transform .25s;pointer-events:none}
+.xp-toast.lose{border-color:var(--danger,#ff6b6b);color:var(--danger,#ff6b6b)}
+.xp-toast.show{opacity:1;transform:translateY(0)}
+.xp-toast.lvlup{bottom:64px;border-color:var(--warn,#ffb454);color:var(--warn,#ffb454)}
+@media print{#game-hud,.xp-toast{display:none}}

@@ -310,6 +310,191 @@ exercise("Plot y = x³ − 3x on axes from −3 to 3 and animate a dot moving al
         self.add(dot)
         self.play(x.animate.set_value(2.2), run_time=4)'''))
 
+T7 = topic(7, "mnm-tex-adv", "MathTex mastery: transforms, braces & spotlights", """
+The killer feature for math talks: split a formula into parts, then <b>morph one equation into
+another</b> while matching terms fly to their new places. This is why you learned LaTeX first.""",
+vid("TexTransform", '''class TexTransform(Scene):
+    def construct(self):
+        eq1 = MathTex("a^2", "+", "b^2", "=", "c^2",
+                      font_size=72)
+        eq2 = MathTex("c^2", "=", "a^2", "+", "b^2",
+                      font_size=72)
+        self.play(Write(eq1))
+        self.wait(0.6)
+        self.play(TransformMatchingTex(eq1, eq2),
+                  run_time=1.5)
+        self.wait(0.6)''',
+    "Each string argument becomes a separately-animatable part. TransformMatchingTex moves identical parts to their new positions.") +
+vid("BraceAnnotate", '''class BraceAnnotate(Scene):
+    def construct(self):
+        eq = MathTex("(", "x+1", ")", "^2", "=",
+                     "x^2+2x+1", font_size=60)
+        self.play(Write(eq))
+        brace = Brace(eq[1], DOWN, color=YELLOW)
+        note = brace.get_text("this part gets squared")
+        note.set_color(YELLOW)
+        box = SurroundingRectangle(eq[5], color=TEAL,
+                                   buff=0.15)
+        self.play(GrowFromCenter(brace), FadeIn(note))
+        self.play(Create(box), Indicate(eq[5]))''',
+    "eq[1] indexes the parts you split. Brace points at anything; SurroundingRectangle + Indicate = instant spotlight.") +
+quiz("You wrote MathTex(r'a^2 + b^2 = c^2') as ONE string. Why can't you animate just the 'b^2'?",
+     [("Manim renders one string as one indivisible mobject \u2014 split it into parts to address them", True),
+      ("You can \u2014 eq['b^2'] always works", False),
+      ("MathTex doesn't support animation at all", False)],
+     "splitting into separate string arguments is exactly what makes per-term animation possible."),
+xp=20)
+
+T8 = topic(8, "mnm-timing", "Timing & choreography: LaggedStart, rate functions", """
+Amateur animations play everything at once at constant speed. Professional ones stagger entrances
+and ease movements. Two tools give you 90% of that polish.""",
+vid("LaggedShapes", '''class LaggedShapes(Scene):
+    def construct(self):
+        dots = VGroup(*[Dot(radius=0.14, color=TEAL)
+                        for _ in range(12)])
+        dots.arrange(RIGHT, buff=0.35)
+        self.play(LaggedStart(
+            *[GrowFromCenter(d) for d in dots],
+            lag_ratio=0.15))
+        self.play(dots.animate.set_color(YELLOW),
+                  run_time=1.5)''',
+    "lag_ratio=0.15: each dot starts when the previous one is 15% done \u2014 a wave instead of a blob.") +
+vid("RateFuncs", '''class RateFuncs(Scene):
+    def construct(self):
+        labels = ["linear", "smooth",
+                  "there_and_back", "rush_into"]
+        funcs = [linear, smooth,
+                 there_and_back, rush_into]
+        rows = VGroup(*[
+            VGroup(Text(n, font_size=24), Dot(color=ORANGE))
+            .arrange(RIGHT, buff=0.5)
+            for n in labels])
+        rows.arrange(DOWN, aligned_edge=LEFT,
+                     buff=0.5).to_edge(LEFT)
+        self.add(rows)
+        self.play(*[row[1].animate(rate_func=fn,
+                                   run_time=2.5)
+                    .shift(RIGHT * 8)
+                    for row, fn in zip(rows, funcs)])''',
+    "Same shift, four personalities. smooth is the default; there_and_back returns home \u2014 great for 'pulse' effects.") +
+quiz("You want 20 stars to appear one after another, overlapping slightly. Best tool?",
+     [("LaggedStart(*[GrowFromCenter(s) for s in stars], lag_ratio=0.1)", True),
+      ("20 separate self.play calls", False),
+      ("AnimationGroup with lag_ratio=1", False)],
+     "lag_ratio < 1 overlaps them; 20 self.play calls would be strictly sequential (and slow)."),
+xp=20)
+
+T9 = topic(9, "mnm-camera", "Camera work: zoom, pan, follow", """
+Switch <code>Scene</code> \u2192 <code>MovingCameraScene</code> and the viewport itself becomes an animatable
+object. Zooming into detail and following motion are the two moves you'll actually use.""",
+vid("CameraZoom", '''class CameraZoom(MovingCameraScene):
+    def construct(self):
+        dots = VGroup(*[Dot(color=BLUE)
+                        for _ in range(9)])
+        dots.arrange_in_grid(3, 3, buff=1.2)
+        target = dots[4].set_color(YELLOW)
+        self.play(Create(dots))
+        self.camera.frame.save_state()
+        self.play(self.camera.frame.animate
+                  .scale(0.35).move_to(target))
+        self.wait(0.4)
+        self.play(Restore(self.camera.frame))''',
+    "self.camera.frame is a rectangle mobject: scale it (zoom), move_to it (pan), Restore brings it back.") +
+vid("CameraFollow", '''class CameraFollow(MovingCameraScene):
+    def construct(self):
+        path = Line(LEFT * 5, RIGHT * 5).shift(DOWN)
+        car = Triangle(color=RED, fill_opacity=1)
+        car.scale(0.3).rotate(-PI / 2)
+        car.move_to(path.get_start())
+        self.add(path, car)
+        self.camera.frame.scale(0.6).move_to(car)
+        self.camera.frame.add_updater(
+            lambda f: f.move_to(car.get_center()))
+        self.play(car.animate.move_to(path.get_end()),
+                  run_time=3, rate_func=linear)''',
+    "An updater on the camera frame = a follow-cam. Same updater idea from Topic 5, applied to the camera.") +
+quiz("Zoom into the top-right corner of a diagram. Which line?",
+     [("self.play(self.camera.frame.animate.scale(0.4).move_to(corner))", True),
+      ("self.play(diagram.animate.scale(2.5))", False),
+      ("config.zoom = 2.5", False)],
+     "scaling the diagram distorts layout & positions; moving the camera frame is non-destructive."),
+xp=20)
+
+T10 = topic(10, "mnm-3d", "3D scenes: axes, spheres, surfaces", """
+<code>ThreeDScene</code> unlocks the third axis. You position the camera with two angles \u2014
+<code>phi</code> (tilt down from vertical) and <code>theta</code> (spin around) \u2014 and can set it
+slowly orbiting while you present.""",
+vid("First3D", '''class First3D(ThreeDScene):
+    def construct(self):
+        axes = ThreeDAxes(x_range=[-4, 4],
+                          y_range=[-4, 4],
+                          z_range=[-3, 3])
+        sphere = Sphere(radius=1,
+                        resolution=(18, 18))
+        sphere.set_color(BLUE)
+        self.set_camera_orientation(
+            phi=70 * DEGREES, theta=-45 * DEGREES)
+        self.play(Create(axes))
+        self.play(Create(sphere))
+        self.begin_ambient_camera_rotation(rate=0.4)
+        self.wait(2.5)''',
+    "phi=70\u00b0 tilts you above the plane; ambient rotation keeps the scene alive while you talk over it.") +
+vid("Surface3D", '''class Surface3D(ThreeDScene):
+    def construct(self):
+        axes = ThreeDAxes(x_range=[-3, 3],
+                          y_range=[-3, 3],
+                          z_range=[-2, 2])
+        surface = Surface(
+            lambda u, v: axes.c2p(
+                u, v, np.sin(u) * np.cos(v)),
+            u_range=[-3, 3], v_range=[-3, 3],
+            resolution=(24, 24), fill_opacity=0.8)
+        surface.set_fill_by_value(axes=axes,
+            colorscale=[(BLUE, -1), (GREEN, 0),
+                        (YELLOW, 1)])
+        self.set_camera_orientation(
+            phi=65 * DEGREES, theta=-50 * DEGREES)
+        self.play(Create(axes), Create(surface),
+                  run_time=2)
+        self.begin_ambient_camera_rotation(rate=0.3)
+        self.wait(2)''',
+    "Surface takes a function (u,v) \u2192 3D point; set_fill_by_value colors by height like a heat map.") +
+quiz("Your 3D text looks skewed because the camera tilts. The fix Manim provides?",
+     [("self.add_fixed_in_frame_mobjects(text) \u2014 pins it to the screen like a HUD", True),
+      ("Rotate the text by -phi", False),
+      ("3D scenes cannot contain text", False)],
+     "fixed-in-frame mobjects ignore the 3D camera \u2014 perfect for titles and labels over 3D content."),
+xp=25)
+
+T11 = topic(11, "mnm-config", "Production settings: quality, format, partial renders", """
+The last mile: rendering the same scene for a quick check, a slide deck, or a final video are
+just different flags. These are the ones that matter in real work.""",
+pre('''# fast draft while iterating (480p @ 15fps)
+manim render -ql --fps 15 scene.py MyScene
+
+# full quality for the final export (1080p60)
+manim render -qh scene.py MyScene
+
+# render a transparent-background overlay (for OBS / video editors)
+manim render -qh -t --format=mov scene.py MyScene
+
+# just the LAST play() call \u2014 lifesaver when polishing an ending
+manim render -ql -n -1 scene.py MyScene
+
+# save the final frame as PNG (thumbnails!)
+manim render -qh -s scene.py MyScene''', "shell") +
+pre('''# per-project defaults: put a manim.cfg next to your scene file
+[CLI]
+quality = medium_quality
+preview = True
+background_color = #101418''', "shell") +
+quiz("Your 3-minute scene's ending is wrong. Fastest way to iterate on just the ending?",
+     [("manim render -ql -n -1 (render only the last animation)", True),
+      ("Render everything at -ql each time", False),
+      ("Comment out all earlier self.play calls", False)],
+     "-n start,end (or -n -1) skips straight to the animations you're fixing \u2014 commenting code out breaks positions."),
+xp=20)
+
 PRETEST = pretest([
     ("Guess: in an animation library, what might a 'Scene' be?", "Your canvas + timeline. You subclass it and describe what happens in <code>construct()</code> — Topic 1."),
     ("How do you think you'd make two animations happen at once?", "Pass both to one <code>play()</code> call. Sequential = separate calls — Topic 2."),
@@ -319,14 +504,17 @@ PRETEST = pretest([
 BODY = f"""
 <h1>Chapter 2 · Manim</h1>
 <p class="lead">Every example below shows the <b>exact code</b> on the left and the <b>real video it
-rendered</b> on the right — click any video to play it, click again to replay. About 3 hours total;
+rendered</b> on the right — click any video to play it, click again to replay. Eleven topics from first circle to 3D camera work — about 6 hours total;
 each topic stands alone, so stop whenever you like.</p>
 <div class="toc"><b>Topics</b>
 <a href="#mnm-scene">1 Scenes &amp; Mobjects</a><a href="#mnm-anim">2 Animations</a>
 <a href="#mnm-pos">3 Positioning</a><a href="#mnm-style">4 Color &amp; styling</a>
 <a href="#mnm-updaters">5 Updaters</a><a href="#mnm-graphs">6 Graphs &amp; MathTex</a>
+<a href="#mnm-tex-adv">7 MathTex mastery</a><a href="#mnm-timing">8 Timing</a>
+<a href="#mnm-camera">9 Camera</a><a href="#mnm-3d">10 3D</a>
+<a href="#mnm-config">11 Production</a>
 <a href="#mnm-ex">✅ Self-exam</a></div>
-{PRETEST}{T1}{T2}{T3}{T4}{T5}{T6}{EXERCISES}
+{PRETEST}{T1}{T2}{T3}{T4}{T5}{T6}{T7}{T8}{T9}{T10}{T11}{EXERCISES}
 <div class="pager">
   <a href="latex.html"><span class="dir">← Previous</span>1 · LaTeX</a>
   <a href="slides.html" class="right"><span class="dir">Next chapter →</span>3 · manim-slides</a>

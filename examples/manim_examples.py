@@ -263,3 +263,110 @@ class TangentSlide(Scene):
         self.add(tangent, dot)
         self.play(x.animate.set_value(2.2), run_time=3, rate_func=linear)
         self.wait(0.3)
+
+
+# ---------- Topic 9: Camera work ----------
+class CameraZoom(MovingCameraScene):
+    def construct(self):
+        dots = VGroup(*[Dot(color=BLUE) for _ in range(9)])
+        dots.arrange_in_grid(3, 3, buff=1.2)
+        target = dots[4].set_color(YELLOW)
+        self.play(Create(dots))
+        self.camera.frame.save_state()
+        self.play(self.camera.frame.animate.scale(0.35).move_to(target))
+        self.wait(0.4)
+        self.play(Restore(self.camera.frame))
+        self.wait(0.3)
+
+
+class CameraFollow(MovingCameraScene):
+    def construct(self):
+        path = Line(LEFT * 5, RIGHT * 5).shift(DOWN)
+        car = Triangle(color=RED, fill_opacity=1).scale(0.3).rotate(-PI / 2)
+        car.move_to(path.get_start())
+        self.add(path, car)
+        self.camera.frame.scale(0.6).move_to(car)
+        self.camera.frame.add_updater(lambda f: f.move_to(car.get_center()))
+        self.play(car.animate.move_to(path.get_end()), run_time=3, rate_func=linear)
+        self.wait(0.3)
+
+
+# ---------- Topic 10: 3D scenes ----------
+class First3D(ThreeDScene):
+    def construct(self):
+        axes = ThreeDAxes(x_range=[-4, 4], y_range=[-4, 4], z_range=[-3, 3])
+        sphere = Sphere(radius=1, resolution=(18, 18)).set_color(BLUE)
+        self.set_camera_orientation(phi=70 * DEGREES, theta=-45 * DEGREES)
+        self.play(Create(axes), run_time=1)
+        self.play(Create(sphere))
+        self.begin_ambient_camera_rotation(rate=0.4)
+        self.wait(2.5)
+
+
+class Surface3D(ThreeDScene):
+    def construct(self):
+        axes = ThreeDAxes(x_range=[-3, 3], y_range=[-3, 3], z_range=[-2, 2])
+        surface = Surface(
+            lambda u, v: axes.c2p(u, v, np.sin(u) * np.cos(v)),
+            u_range=[-3, 3], v_range=[-3, 3], resolution=(24, 24),
+            fill_opacity=0.8,
+        )
+        surface.set_fill_by_value(axes=axes, colorscale=[(BLUE, -1), (GREEN, 0), (YELLOW, 1)])
+        self.set_camera_orientation(phi=65 * DEGREES, theta=-50 * DEGREES)
+        self.play(Create(axes), Create(surface), run_time=2)
+        self.begin_ambient_camera_rotation(rate=0.3)
+        self.wait(2)
+
+
+# ---------- Topic 11: Timing & choreography ----------
+class LaggedShapes(Scene):
+    def construct(self):
+        dots = VGroup(*[Dot(radius=0.14, color=TEAL) for _ in range(12)])
+        dots.arrange(RIGHT, buff=0.35)
+        self.play(LaggedStart(*[GrowFromCenter(d) for d in dots], lag_ratio=0.15))
+        self.play(dots.animate.set_color(YELLOW), lag_ratio=0.1, run_time=1.5)
+        self.wait(0.3)
+
+
+class RateFuncs(Scene):
+    def construct(self):
+        labels = ["linear", "smooth", "there_and_back", "rush_into"]
+        funcs = [linear, smooth, there_and_back, rush_into]
+        rows = VGroup()
+        for name, fn in zip(labels, funcs):
+            dot = Dot(color=ORANGE)
+            tag = Text(name, font_size=24)
+            row = VGroup(tag, dot).arrange(RIGHT, buff=0.5)
+            rows.add(row)
+        rows.arrange(DOWN, aligned_edge=LEFT, buff=0.5).to_edge(LEFT)
+        self.add(rows)
+        anims = []
+        for row, fn in zip(rows, funcs):
+            anims.append(row[1].animate(rate_func=fn, run_time=2.5).shift(RIGHT * 8))
+        self.play(*anims)
+        self.wait(0.3)
+
+
+# ---------- Topic 7: Text & MathTex mastery ----------
+class TexTransform(Scene):
+    def construct(self):
+        eq1 = MathTex("a^2", "+", "b^2", "=", "c^2", font_size=72)
+        eq2 = MathTex("c^2", "=", "a^2", "+", "b^2", font_size=72)
+        self.play(Write(eq1))
+        self.wait(0.6)
+        self.play(TransformMatchingTex(eq1, eq2), run_time=1.5)
+        self.wait(0.6)
+
+
+class BraceAnnotate(Scene):
+    def construct(self):
+        eq = MathTex("(", "x+1", ")", "^2", "=", "x^2+2x+1", font_size=60)
+        self.play(Write(eq))
+        part = eq[1]
+        brace = Brace(part, DOWN, color=YELLOW)
+        note = brace.get_text("this part gets squared").set_color(YELLOW)
+        box = SurroundingRectangle(eq[5], color=TEAL, buff=0.15)
+        self.play(GrowFromCenter(brace), FadeIn(note))
+        self.wait(0.5)
+        self.play(Create(box), Indicate(eq[5]))
+        self.wait(0.5)
