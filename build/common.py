@@ -171,7 +171,7 @@ def page(filename: str, title: str, body: str, katex: bool = False) -> str:
 </main>
 <footer class="site">
   <p>Manim Slides Academy — open source (MIT), <b>AI-generated</b> content, human-reviewed examples that all actually render.<br>
-  Works 100% offline · No trackers, no cookies, no network requests ·
+  Works 100% offline · <a href="https://github.com/Alamin-H-M/manim-slides-academy/releases/latest/download/manim-slides-academy-offline.zip">Download the site as a ZIP</a> · No trackers, no cookies ·
   <a href="https://github.com/Alamin-H-M/manim-slides-academy">Contribute on GitHub</a></p>
 </footer>
 </body>

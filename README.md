@@ -22,10 +22,15 @@ Each topic follows the same low-brain-drain recipe: **2 easy examples → 2 prog
 
 ## 🚀 Use it
 
-No install, no server, no internet:
+**Easiest — download the ready-to-use offline ZIP (1.6 MB):**
 
-1. Download / clone this repository.
-2. Open `site/index.html` in any browser. Done.
+### [⬇ Download manim-slides-academy-offline.zip](https://github.com/Alamin-H-M/manim-slides-academy/releases/latest/download/manim-slides-academy-offline.zip)
+
+Unzip → open `index.html` in any browser → done. No install, no server, no internet, works forever.
+
+**Or use it online:** https://alamin-h-m.github.io/manim-slides-academy/
+
+**Or clone the repo** (includes the build system for contributors) and open `site/index.html`.
 
 (Optionally serve it — `python -m http.server -d site` — but `file://` works fully.)
 

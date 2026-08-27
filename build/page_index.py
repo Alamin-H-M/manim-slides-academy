@@ -7,6 +7,9 @@ BODY = """
   with live playgrounds, real rendered animations and click-through slide decks.
   No internet, no account, no installs needed to read it.</p>
   <div class="pillrow">
+    <a class="pill" href="https://github.com/Alamin-H-M/manim-slides-academy/releases/latest/download/manim-slides-academy-offline.zip" style="border-color:var(--accent);color:var(--accent)">⬇ Download the whole course (1.6 MB ZIP) — use it forever offline</a>
+  </div>
+  <div class="pillrow">
     <span class="pill">⚡ loads instantly</span>
     <span class="pill">📴 100% offline</span>
     <span class="pill">🧠 minimal brain-drain: one idea at a time</span>
