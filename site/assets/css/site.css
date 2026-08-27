@@ -313,3 +313,23 @@ footer.site a { color: var(--muted); text-decoration: underline; }
 .xp-toast.show{opacity:1;transform:translateY(0)}
 .xp-toast.lvlup{bottom:64px;border-color:var(--warn,#ffb454);color:var(--warn,#ffb454)}
 @media print{#game-hud,.xp-toast{display:none}}
+
+/* ===== UX fixes ===== */
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.xp-toast{transition:none}.hud-bar i,.hud-mini i{transition:none}}
+/* anchored targets must not hide under the sticky HUD */
+h2[id],h3[id],.tex-challenge[id],.exercise[id]{scroll-margin-top:56px}
+/* HUD is a link now — keep it looking like a bar, and highlight the jump target */
+a.hud-bar{text-decoration:none;color:inherit}
+a.hud-bar:hover i{opacity:.8}
+:target{animation:msa-target 1.6s ease-out 1}
+@keyframes msa-target{0%{background:rgba(96,165,250,.18)}100%{background:transparent}}
+/* reserve HUD height to avoid content jump when JS fills it */
+#game-hud{min-height:30px}
+#game-hud[hidden]{display:block;visibility:hidden}
+/* tighter nav on small screens (8 entries) */
+@media (max-width:680px){
+  nav.main a{padding:4px 7px;font-size:.78rem}
+  .hud-inner{gap:8px;font-size:.75rem;padding:5px 12px}
+  .hud-bar{min-width:80px}
+}

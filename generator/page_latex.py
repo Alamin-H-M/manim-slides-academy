@@ -1,4 +1,5 @@
-from common import page, pre, texplay, example, quiz, exercise, topic, challenge, pretest
+from common import page, pre, texplay, example, quiz, exercise, topic, challenge, pretest, set_page
+set_page("latex.html")
 
 T1 = topic(1, "ltx-what", "What LaTeX is (and the 60-second mental model)", """
 LaTeX is not a text editor — it's a <b>language</b>: you type plain text with commands like

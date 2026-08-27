@@ -1,4 +1,5 @@
-from common import page, pre, deck, example, quiz, exercise, topic, pretest
+from common import page, pre, deck, example, quiz, exercise, topic, pretest, set_page
+set_page("slides.html")
 
 T1 = topic(1, "sld-first", "From Scene to Slide — one import, one call", """
 Change <code>Scene</code> to <code>Slide</code> (from manim_slides) and call

@@ -1,4 +1,5 @@
-from common import page, pre, vid, example, quiz, exercise, topic, pretest
+from common import page, pre, vid, example, quiz, exercise, topic, pretest, set_page
+set_page("manim.html")
 
 T1 = topic(1, "mnm-scene", "Scenes & Mobjects — the two words that explain everything", """
 A <b>Scene</b> is your canvas + timeline. A <b>Mobject</b> ("mathematical object") is anything drawable:

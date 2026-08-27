@@ -7,7 +7,7 @@ BODY = """
   with live playgrounds, real rendered animations and click-through slide decks.
   No internet, no account, no installs needed to read it.</p>
   <div class="pillrow">
-    <a class="pill" href="https://github.com/Alamin-H-M/manim-slides-academy/releases/latest/download/manim-slides-academy-offline.zip" style="border-color:var(--accent);color:var(--accent)">⬇ Download the whole course (1.6 MB ZIP) — use it forever offline</a>
+    <a class="pill" href="https://github.com/Alamin-H-M/manim-slides-academy/releases/latest/download/manim-slides-academy-offline.zip" style="border-color:var(--accent);color:var(--accent)">⬇ Download the whole course (~2 MB ZIP) — use it forever offline</a>
   </div>
   <div class="pillrow">
     <span class="pill">⚡ loads instantly</span>
@@ -16,6 +16,26 @@ BODY = """
     <span class="pill">🔓 open source · AI-generated</span>
   </div>
 </div>
+
+
+<div id="resume-strip" hidden style="max-width:760px;margin:0 auto 8px;padding:12px 18px;border:1px solid var(--line,#232a36);border-radius:12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+  <span style="font-weight:600">▶ Pick up where you left off</span>
+  <span id="resume-info" class="muted small"></span>
+  <a id="resume-link" class="go" href="latex.html" style="margin-left:auto">Continue →</a>
+</div>
+<script>
+(function(){
+  function go(){
+    if (!window.msaProgress) return setTimeout(go, 80);
+    var p = window.msaProgress();
+    if (!p || !p.done || !p.next || !p.next.p) return;
+    document.getElementById("resume-strip").hidden = false;
+    document.getElementById("resume-info").textContent = p.done + " of " + p.total + " items done (" + p.pct + "%)";
+    document.getElementById("resume-link").href = p.next.p + "#" + p.next.k;
+  }
+  go();
+})();
+</script>
 
 <div class="cards">
   <div class="card">
@@ -95,10 +115,14 @@ Consistency beats bingeing; that is the entire science of spaced practice in one
 <p><b>Levels</b> climb from <i>Newcomer</i> through <i>Formula Wrangler</i> and <i>Scene Director</i> to
 <i>Academy Legend</i> (1400 XP). The green bar shows your <b>course progress %</b> — all 59 trackable
 items across every chapter, challenge, quiz and milestone. 80% completed means exactly that.</p>
+
+<p class="muted small"><b>Backup:</b> progress lives only in this browser.
+<button id="msa-export" class="copybtn" style="position:static">export progress</button>
+<label class="copybtn" style="position:static;cursor:pointer">import progress<input id="msa-import" type="file" accept=".json" style="display:none"></label>
+— export before clearing browser data or switching machines; import restores XP, streak, ticks, challenges and flashcards.</p>
 <p class="muted small">Anti-cheat, sort of: each topic/challenge/quiz pays out once ever. Flashcard XP repeats
 daily because re-reviewing genuinely is the work. Un-ticking a topic takes its XP back. Everything lives in
-localStorage — clear your browser data and your legend dies with it, so export your streak bragging
-rights via screenshot.</p>
+localStorage — use the export button above so your legend survives a browser reset.</p>
 <h2>The path — a complete learning system</h2>
 <p class="lead">This is not just reading material. It's a full loop based on how memory actually works:
 <b>guess first</b> (pretests) → <b>learn by doing</b> (chapters) → <b>build for real</b> (capstone) →

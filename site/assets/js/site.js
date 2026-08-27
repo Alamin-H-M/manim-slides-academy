@@ -278,14 +278,17 @@
     try { boxes = JSON.parse(localStorage.getItem("msa-progress") || "{}"); } catch (_) {}
     try { chs = JSON.parse(localStorage.getItem("msa-challenges") || "{}"); } catch (_) {}
     var g = gload();
-    var done = 0;
+    var done = 0, next = null;
     reg.forEach(function (it) {
-      if (it.t === "box" && boxes[it.k]) done++;
-      else if (it.t === "ch" && chs[it.k]) done++;
-      else if (it.t === "qz" && g.aw[it.k]) done++;
+      var d = (it.t === "box" && boxes[it.k]) ||
+              (it.t === "ch" && chs[it.k]) ||
+              (it.t === "qz" && g.aw[it.k]);
+      if (d) done++;
+      else if (!next) next = it;
     });
-    return { done: done, total: reg.length, pct: Math.round(100 * done / reg.length) };
+    return { done: done, total: reg.length, pct: Math.round(100 * done / reg.length), next: next };
   }
+  window.msaProgress = courseProgress; // used by the index page "continue" card
 
   /* ---------- HUD ---------- */
   var hud = document.getElementById("game-hud");
@@ -310,8 +313,10 @@
       "🎯 today " + tXP + "/" + DAILY_GOAL +
       '<span class="hud-mini"><i style="width:' + goalPct + '%"></i></span></span>' +
       '<span class="hud-streak" title="days in a row you hit the daily goal">🔥 ' + st + "</span>" +
-      (cp ? '<span class="hud-bar course" title="' + cp.done + " of " + cp.total + ' items completed">' +
-        '<i style="width:' + cp.pct + '%"></i><b>' + cp.pct + "% course</b></span>" : "") +
+      (cp ? '<a class="hud-bar course" href="' + (cp.next && cp.next.p ? cp.next.p + "#" + cp.next.k : "index.html") +
+        '" title="' + cp.done + " of " + cp.total + " items done" +
+        (cp.next && cp.next.p ? " — click to jump to the next one" : "") + '">' +
+        '<i style="width:' + cp.pct + '%"></i><b>' + cp.pct + "% course</b></a>" : "") +
       "</div>";
   }
 
@@ -360,6 +365,35 @@
   /* checkbox / challenge state changed in another tab → refresh HUD */
   window.addEventListener("storage", function (e) {
     if (e.key === G_LS || e.key === "msa-progress" || e.key === "msa-challenges") renderHUD();
+  });
+
+  /* ---------- progress backup / restore (localStorage is fragile) ---------- */
+  var BK_KEYS = ["msa-game", "msa-progress", "msa-challenges", "msa-srs-v1"];
+  var expBtn = document.getElementById("msa-export");
+  if (expBtn) expBtn.addEventListener("click", function () {
+    var dump = { _msa: 1, when: new Date().toISOString() };
+    BK_KEYS.forEach(function (k) { dump[k] = localStorage.getItem(k); });
+    var blob = new Blob([JSON.stringify(dump)], { type: "application/json" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "academy-progress.json";
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 500);
+  });
+  var impInput = document.getElementById("msa-import");
+  if (impInput) impInput.addEventListener("change", function () {
+    var f = impInput.files && impInput.files[0];
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      try {
+        var dump = JSON.parse(r.result);
+        if (!dump._msa) throw new Error("not a progress file");
+        BK_KEYS.forEach(function (k) { if (dump[k]) localStorage.setItem(k, dump[k]); });
+        location.reload();
+      } catch (e) { alert("That doesn't look like an Academy progress file."); }
+    };
+    r.readAsText(f);
   });
 
   renderHUD();

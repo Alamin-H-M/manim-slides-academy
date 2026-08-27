@@ -1,4 +1,5 @@
-from common import page, pre, milestone
+from common import page, pre, milestone, set_page
+set_page("capstone.html")
 
 BODY = """
 <h1>🏆 Capstone — build a real animated talk</h1>
