@@ -7,7 +7,7 @@
 > (at a user's request), then published as open source. Every code example was actually
 > executed and every animation on the site is the real render of the code shown next to it —
 > but review it with the same healthy skepticism you'd apply to any community resource.
-> Found an error? Please [open an issue](../../issues) or a pull request!
+> Found an error? Please [open an issue](https://github.com/Alamin-H-M/manim-slides-academy/issues) or a pull request!
 
 ## ✨ What's inside
 
@@ -61,6 +61,12 @@ Anyone can contribute — see [CONTRIBUTING.md](CONTRIBUTING.md). Good first con
 - Add translations
 - Add a new example (please include the rendered video and keep it < 50 KB)
 - Add new topics (3D scenes, camera movement, manim-voiceover…)
+
+## 🧩 Companion tool
+
+This course's one-keystroke workflow (▶ → live preview on every save) is powered by the
+**[Manim Slides Preview](https://github.com/Alamin-H-M/manim-slides-preview)** VS Code extension — offline installable, zero dependencies,
+with browser / VS Code tab / native GUI preview targets and background .pptx export.
 
 ## 📄 License
 

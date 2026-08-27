@@ -47,7 +47,7 @@ and you're offline-ready forever.</div>
 <table>
 <tr><th>Extension</th><th>Why</th></tr>
 <tr><td><b>Python</b> (Microsoft)</td><td>IntelliSense + running scripts. Nothing else needed for Manim.</td></tr>
-<tr><td><b>Manim Slides Preview</b> (.vsix, offline)</td><td>The ▶-button → auto-preview workflow used in this course; installs from a local file, no marketplace/internet.</td></tr>
+<tr><td><b><a href="https://github.com/Alamin-H-M/manim-slides-preview">Manim Slides Preview</a></b> (.vsix, offline — download from GitHub)</td><td>The ▶-button → auto-preview workflow used in this course; installs from a local file, no marketplace/internet.</td></tr>
 </table>
 """ + pre("""# install a .vsix without internet:
 code --install-extension manim-slides-preview-1.7.0.vsix""", "shell") + """
