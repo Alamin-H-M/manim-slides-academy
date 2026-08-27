@@ -158,6 +158,7 @@ def page(filename: str, title: str, body: str, katex: bool = False, desc: str = 
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-site-verification" content="G9nUhiPGHB-PRAzOsDSdJxR47JKmGOSKM3EP1jkNtdk" />
 <title>{esc(title)} — Manim Slides Academy</title>
 <meta name="description" content="{desc}">
 <link rel="canonical" href="https://alamin-h-m.github.io/manim-slides-academy/site/{filename}">
