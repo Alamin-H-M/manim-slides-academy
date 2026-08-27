@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the Manim Slides Academy static site: python3 build/build.py
+"""Build the Manim Slides Academy static site: python3 generator/build.py
 Regenerates site/*.html from the page_*.py content modules. No dependencies."""
 import os
 import sys

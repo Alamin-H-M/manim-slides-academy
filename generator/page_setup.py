@@ -95,4 +95,4 @@ presentations work in a lecture hall with no WiFi: <code>manim-slides convert --
 """
 
 def render():
-    return page("setup.html", "Setup", BODY)
+    return page("setup.html", "Setup", BODY, desc='How to install Python, Manim, manim-slides, LaTeX (MiKTeX/TeX Live) and VS Code for a fully offline math-animation workflow — step-by-step beginner setup guide with verification commands.')

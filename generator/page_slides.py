@@ -232,4 +232,4 @@ to advance, exactly like your audience would.</p>
 """
 
 def render():
-    return page("slides.html", "manim-slides", BODY)
+    return page("slides.html", "manim-slides", BODY, desc='manim-slides tutorial: turn Manim animations into interactive presentations with next_slide(), looping slides, HTML/PowerPoint export — with embedded click-through example decks.')

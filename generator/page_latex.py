@@ -154,4 +154,4 @@ Total time: about 2 hours, best split over 2–3 sittings.</p>
 """
 
 def render():
-    return page("latex.html", "LaTeX", BODY, katex=True)
+    return page("latex.html", "LaTeX", BODY, katex=True, desc='LaTeX tutorial for beginners with live editable examples: fractions, Greek letters, integrals, matrices, aligned equations and full documents — rendered instantly in your browser, works offline.')

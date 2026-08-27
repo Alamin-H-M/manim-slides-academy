@@ -146,7 +146,10 @@ def topic(n: int, key: str, title: str, intro: str, body: str) -> str:
             f'<p class="lead">{intro}</p>{body}')
 
 
-def page(filename: str, title: str, body: str, katex: bool = False) -> str:
+def page(filename: str, title: str, body: str, katex: bool = False, desc: str = "") -> str:
+    desc = desc or ("Free offline course: learn LaTeX, Manim and manim-slides from zero "
+                    "with live playgrounds, rendered animations and interactive slide decks.")
+    esc_title = esc(title)
     nav = "".join(f'<a href="{h}">{t}</a>' for h, t in NAV)
     katex_head = ('<link rel="stylesheet" href="assets/katex/katex.min.css">'
                   '<script defer src="assets/katex/katex.min.js"></script>') if katex else ""
@@ -156,7 +159,14 @@ def page(filename: str, title: str, body: str, katex: bool = False) -> str:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(title)} — Manim Slides Academy</title>
-<meta name="description" content="A free, offline, open-source course: LaTeX, Manim and manim-slides from zero — with interactive examples.">
+<meta name="description" content="{desc}">
+<link rel="canonical" href="https://alamin-h-m.github.io/manim-slides-academy/site/{filename}">
+<meta property="og:title" content="{esc_title} — Manim Slides Academy">
+<meta property="og:description" content="{desc}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://alamin-h-m.github.io/manim-slides-academy/site/{filename}">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{{"@context":"https://schema.org","@type":"Course","name":"Manim Slides Academy","description":"Free offline course teaching LaTeX, Manim and manim-slides with interactive examples.","provider":{{"@type":"Organization","name":"Manim Slides Academy","sameAs":"https://github.com/Alamin-H-M/manim-slides-academy"}},"isAccessibleForFree":true,"inLanguage":"en","offers":{{"@type":"Offer","price":"0","priceCurrency":"USD"}},"hasCourseInstance":{{"@type":"CourseInstance","courseMode":"online","courseWorkload":"PT7H"}}}}</script>
 <link rel="stylesheet" href="assets/css/site.css">
 {katex_head}
 <script defer src="assets/js/site.js"></script>

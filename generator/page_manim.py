@@ -328,4 +328,4 @@ each topic stands alone, so stop whenever you like.</p>
 """
 
 def render():
-    return page("manim.html", "Manim", BODY)
+    return page("manim.html", "Manim", BODY, desc='Manim tutorial for beginners: Scenes, Mobjects, animations, positioning, updaters, ValueTracker, graphs and MathTex — 24 real rendered example videos next to their exact Python source code.')

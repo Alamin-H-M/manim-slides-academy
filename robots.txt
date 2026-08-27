@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://alamin-h-m.github.io/manim-slides-academy/sitemap.xml

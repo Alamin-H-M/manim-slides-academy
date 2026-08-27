@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Re-encode rendered example videos into site/assets/video (small x264 + poster JPGs).
 Uses PyAV (installed with Manim) — no ffmpeg binary needed.
-Run from repo root: python3 build/encode_videos.py
+Run from repo root: python3 generator/encode_videos.py
 """
 import glob
 import os

@@ -46,7 +46,7 @@ Unzip → open `index.html` in any browser → done. No install, no server, no i
 The HTML is generated from Python content modules (no dependencies):
 
 ```bash
-python3 build/build.py          # regenerates site/*.html
+python3 generator/build.py          # regenerates site/*.html
 ```
 
 To re-render the example animations (needs `manim` + `manim-slides`):

@@ -68,4 +68,4 @@ code beside it — but treat it like any community resource: if something looks 
 """
 
 def render():
-    return page("index.html", "Home", BODY)
+    return page("index.html", "Home", BODY, desc='Learn LaTeX, Manim and manim-slides completely free and offline: live LaTeX playgrounds, 24 rendered Manim animation examples with source code, interactive slide decks, quizzes and exercises. Open-source beginner course.')
