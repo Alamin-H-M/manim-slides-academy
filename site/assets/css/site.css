@@ -251,3 +251,43 @@ footer.site a { color: var(--muted); text-decoration: underline; }
   header.site, .pager, footer.site, .copybtn, .donebox { display: none; }
   body { background: #fff; color: #000; }
 }
+
+/* ---------- "write this in LaTeX" challenges ---------- */
+.tex-challenge {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px 18px; margin: 16px 0;
+}
+.tex-challenge .target {
+  background: var(--code-bg); border: 1px dashed var(--accent);
+  border-radius: 8px; padding: 14px; text-align: center; font-size: 1.25rem;
+  margin: 10px 0;
+}
+.tex-challenge .attempt { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 720px) { .tex-challenge .attempt { grid-template-columns: 1fr; } }
+.tex-challenge textarea {
+  width: 100%; min-height: 74px; resize: vertical; border-radius: 8px;
+  background: var(--code-bg); color: var(--fg); border: 1px solid var(--border);
+  padding: 12px; font-family: ui-monospace, Consolas, monospace; font-size: 0.9rem;
+  outline: none;
+}
+.tex-challenge textarea:focus { border-color: var(--accent); }
+.tex-challenge.won textarea { border-color: var(--accent2); }
+.tex-challenge .yours {
+  background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 12px; display: flex; align-items: center; justify-content: center;
+  min-height: 74px; font-size: 1.15rem; overflow-x: auto;
+}
+.tex-challenge.won .yours { border-color: var(--accent2); }
+.tex-challenge .ch-status { font-size: 0.92rem; margin-top: 8px; min-height: 1.3em; }
+.tex-challenge .ch-btns { margin-top: 8px; display: flex; gap: 8px; }
+.tex-challenge .ch-btns button {
+  border: 1px solid var(--border); background: var(--bg3); color: var(--muted);
+  border-radius: 6px; font-size: 0.8rem; padding: 4px 12px; cursor: pointer;
+}
+.tex-challenge .ch-btns button:hover { color: var(--fg); border-color: var(--accent); }
+.tex-challenge .ch-q { font-weight: 600; }
+.tex-challenge .badge-won {
+  display: inline-block; background: #0c3a2b; color: #4ade80;
+  border-radius: 999px; padding: 2px 12px; font-size: 0.78rem; font-weight: 700;
+  margin-left: 8px; vertical-align: middle;
+}

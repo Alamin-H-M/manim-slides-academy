@@ -187,3 +187,18 @@ def page(filename: str, title: str, body: str, katex: bool = False, desc: str = 
 </footer>
 </body>
 </html>"""
+
+
+def challenge(key: str, prompt: str, target: str, hint: str = "") -> str:
+    """'Write this in LaTeX' game: shows rendered math, user types LaTeX,
+    live-checks whether their rendering matches the goal exactly."""
+    return (f'<div class="tex-challenge" data-key="{key}" data-target="{esc(target)}" data-hint="{esc(hint)}">'
+            f'<div class="ch-q">🎯 {prompt}</div>'
+            f'<div class="target">{esc(target)}</div>'
+            f'<div class="attempt">'
+            f'<textarea spellcheck="false" placeholder="type your LaTeX here…" aria-label="LaTeX attempt"></textarea>'
+            f'<div class="yours"></div></div>'
+            f'<div class="ch-status"></div>'
+            f'<div class="ch-btns"><button type="button" class="ch-hint">hint</button>'
+            f'<button type="button" class="ch-reveal">give up — show solution</button></div>'
+            f'</div>')

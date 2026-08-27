@@ -1,4 +1,4 @@
-from common import page, pre, texplay, example, quiz, exercise, topic
+from common import page, pre, texplay, example, quiz, exercise, topic, challenge
 
 T1 = topic(1, "ltx-what", "What LaTeX is (and the 60-second mental model)", """
 LaTeX is not a text editor — it's a <b>language</b>: you type plain text with commands like
@@ -15,7 +15,10 @@ example("hard", "Commands take arguments in braces", texplay(
     r"\frac{top}{bottom} takes TWO arguments. \sqrt takes an optional [n] for nth roots.")) +
 example("hard", "Nesting: commands inside commands", texplay(
     r"\frac{1}{1+\frac{1}{1+\frac{1}{x}}}",
-    "Any argument can itself contain commands — that's how complex formulas are built.")))
+    "Any argument can itself contain commands — that's how complex formulas are built.")) + \
+challenge("c-power", "Can you write this? (superscripts + subscripts)",
+    r"a_n = a_1 r^{n-1}",
+    "Subscript with _, superscript with ^. The exponent n-1 has two characters — brace it: ^{n-1}."))
 
 T2 = topic(2, "ltx-symbols", "Greek letters & the symbols mathematicians actually use", """
 Every Greek letter is a command: <code>\\alpha</code> → α. Capitalize the command for capitals:
@@ -31,7 +34,10 @@ example("hard", "Sets and logic", texplay(
     r"\mathbb{R} = blackboard bold. \in / \notin = set membership. \; adds a little space.")) +
 example("hard", "Operators that size themselves", texplay(
     r"\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}\qquad \prod_{k=1}^{n} k = n!",
-    r"On \sum and \prod, _ and ^ become the lower/upper limits automatically.")))
+    r"On \sum and \prod, _ and ^ become the lower/upper limits automatically.")) + \
+challenge("c-sum", "Your turn — an infinite sum with Greek letters:",
+    r"\sum_{k=1}^{\infty} \frac{\lambda^k}{k!} = e^{\lambda} - 1",
+    "\\sum with limits, \\frac for the fraction, \\lambda and \\infty for the symbols."))
 
 T3 = topic(3, "ltx-structure", "Fractions, roots, integrals, limits — building real formulas", """
 Real formulas are just the pieces you've seen, combined. The skill is reading a formula
@@ -47,7 +53,10 @@ example("hard", "Limits and derivatives", texplay(
     r"\lim_{...} puts its argument underneath in display mode.")) +
 example("hard", "Putting it all together", texplay(
     r"\Gamma(z) = \int_0^\infty t^{z-1} e^{-t} \, dt",
-    "Read it outside-in: an integral, with limits, of a product of two powers.")))
+    "Read it outside-in: an integral, with limits, of a product of two powers.")) + \
+challenge("c-integral", "Write this Gaussian integral:",
+    r"\int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}",
+    "Integral limits use _ and ^ just like sums. \\, adds the thin space before dx."))
 
 T4 = topic(4, "ltx-brackets", "Brackets that grow & multi-line math", """
 Plain parentheses stay small around tall content — ugly. <code>\\left(</code> and <code>\\right)</code>
@@ -64,7 +73,10 @@ example("hard", "A two-line derivation with aligned", texplay(
     "& marks where lines align (before the =). \\\\ starts a new line.")) +
 example("hard", "Cases (piecewise functions)", texplay(
     "|x| = \\begin{cases}\n x & \\text{if } x \\ge 0 \\\\\n -x & \\text{if } x < 0\n\\end{cases}",
-    r"\text{...} switches to normal words inside math mode.")))
+    r"\text{...} switches to normal words inside math mode.")) + \
+challenge("c-cases", "Recreate this piecewise definition:",
+    "f(x) = \\begin{cases} x^2 & x \\ge 0 \\\\ -x & x < 0 \\end{cases}",
+    "\\begin{cases}...\\end{cases}; & before each condition, \\\\\\\\ between rows, \\ge for \u2265."))
 
 T5 = topic(5, "ltx-matrices", "Matrices & vectors", """
 Matrices are grids: <code>&amp;</code> separates columns, <code>\\\\</code> separates rows.
@@ -82,7 +94,10 @@ example("hard", "Matrix × vector", texplay(
     "This is the 2D rotation matrix — you'll animate exactly this in the Manim chapter.")) +
 example("hard", "A determinant with dots", texplay(
     "\\det(A) = \\begin{vmatrix} a_{11} & \\cdots & a_{1n} \\\\ \\vdots & \\ddots & \\vdots \\\\ a_{n1} & \\cdots & a_{nn} \\end{vmatrix}",
-    r"\cdots horizontal, \vdots vertical, \ddots diagonal dots.")))
+    r"\cdots horizontal, \vdots vertical, \ddots diagonal dots.")) + \
+challenge("c-matrix", "Build this matrix equation:",
+    "\\begin{bmatrix} 1 & 1 \\\\ 0 & 1 \\end{bmatrix}^n = \\begin{bmatrix} 1 & n \\\\ 0 & 1 \\end{bmatrix}",
+    "Two bmatrix environments; the first one is raised to the power n with ^n after \\end{bmatrix}."))
 
 T6 = topic(6, "ltx-docs", "Complete documents (the part Manim does for you)", """
 Everything so far was <em>math mode</em> — which is all Manim needs. But a standalone LaTeX
@@ -112,7 +127,10 @@ MathTex(r"e^{i\pi} + 1 = 0")
 # ...Manim generates a tiny document around your math,
 # compiles it, and turns the result into animatable shapes.
 # The r"" (raw string) stops Python from eating your backslashes!''') +
-"<p class='muted small'>This is why the math-mode skills above transfer 1:1 to Manim.</p>"))
+"<p class='muted small'>This is why the math-mode skills above transfer 1:1 to Manim.</p>") + \
+challenge("c-final", "Final boss — everything at once:",
+    r"\left( \sum_{i=1}^{n} x_i^2 \right)^{1/2} \le \sum_{i=1}^{n} |x_i|",
+    "\\left( \\right) for growing brackets, \\le for \u2264, |x_i| is just vertical bars."))
 
 EXERCISES = """
 <h2 id="ltx-ex">Self-examination</h2>
@@ -140,7 +158,7 @@ BODY = f"""
 <h1>Chapter 1 · LaTeX</h1>
 <p class="lead">Everything below is a <b>live playground</b> — edit the left side, the math re-renders
 instantly. You cannot break anything; errors show in red and vanish when fixed.
-Total time: about 2 hours, best split over 2–3 sittings.</p>
+Total time: about 2 hours, best split over 2–3 sittings.<br>🎯 <b>New:</b> each topic ends with a <b>“write this in LaTeX”</b> challenge — we show the math, you reproduce it, the page tells you instantly when your version matches.</p>
 <div class="toc"><b>Topics</b>
 <a href="#ltx-what">1 Mental model</a><a href="#ltx-symbols">2 Symbols</a>
 <a href="#ltx-structure">3 Real formulas</a><a href="#ltx-brackets">4 Brackets &amp; multi-line</a>

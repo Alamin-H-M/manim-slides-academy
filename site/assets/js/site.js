@@ -36,6 +36,91 @@
     document.addEventListener("DOMContentLoaded", initTexPlaygrounds);
   else initTexPlaygrounds();
 
+  /* ---------- "write this in LaTeX" challenges ---------- */
+  function initChallenges() {
+    var chs = document.querySelectorAll(".tex-challenge");
+    if (!chs.length || !window.katex) { if (chs.length) setTimeout(initChallenges, 150); return; }
+    var LSW = "msa-challenges";
+    var won = {};
+    try { won = JSON.parse(localStorage.getItem(LSW) || "{}"); } catch (_) {}
+
+    chs.forEach(function (ch, idx) {
+      var target = ch.getAttribute("data-target");
+      var key = ch.getAttribute("data-key") || ("ch" + idx);
+      var targetBox = ch.querySelector(".target");
+      var ta = ch.querySelector("textarea");
+      var out = ch.querySelector(".yours");
+      var status = ch.querySelector(".ch-status");
+      var hintBtn = ch.querySelector(".ch-hint");
+      var revealBtn = ch.querySelector(".ch-reveal");
+      var title = ch.querySelector(".ch-q");
+
+      // Compare RENDERED output, not keystrokes — so spacing differences don't
+      // matter, but any real difference does. KaTeX embeds the literal source
+      // in an <annotation> tag; strip it before comparing.
+      function norm(html) {
+        return html.replace(/<annotation[^>]*>[\s\S]*?<\/annotation>/g, "");
+      }
+      var targetHTML = "";
+      try {
+        var raw = katex.renderToString(target, { displayMode: true, throwOnError: true });
+        targetHTML = norm(raw);
+        targetBox.innerHTML = raw;
+      } catch (e) { targetBox.textContent = target; }
+
+      function celebrate() {
+        ch.classList.add("won");
+        status.textContent = "✓ Perfect — your LaTeX renders exactly like the goal!";
+        status.style.color = "var(--accent2)";
+        if (title && !title.querySelector(".badge-won")) {
+          var b = document.createElement("span");
+          b.className = "badge-won"; b.textContent = "SOLVED";
+          title.appendChild(b);
+        }
+        won[key] = true;
+        try { localStorage.setItem(LSW, JSON.stringify(won)); } catch (_) {}
+      }
+
+      function check() {
+        var v = ta.value.trim();
+        if (!v) { out.innerHTML = '<span class="muted small">your rendering appears here…</span>'; status.textContent = ""; return; }
+        var html;
+        try {
+          html = katex.renderToString(v, { displayMode: true, throwOnError: true });
+          out.innerHTML = html;
+        } catch (e) {
+          out.innerHTML = '<span class="tex-err">' + String(e.message || e).replace(/[<>&]/g, function (c) {
+            return { "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c];
+          }) + "</span>";
+          status.textContent = "…keep typing (LaTeX error)";
+          status.style.color = "var(--muted)";
+          return;
+        }
+        if (norm(html) === targetHTML) celebrate();
+        else if (!ch.classList.contains("won")) {
+          status.textContent = "Renders fine — but doesn't match the goal yet. Compare closely!";
+          status.style.color = "var(--warn)";
+        }
+      }
+      ta.addEventListener("input", check);
+
+      if (hintBtn) hintBtn.addEventListener("click", function () {
+        status.textContent = "💡 " + (ch.getAttribute("data-hint") || "Look at the structure: what is the outermost shape?");
+        status.style.color = "var(--accent)";
+      });
+      if (revealBtn) revealBtn.addEventListener("click", function () {
+        ta.value = target; check();
+        status.textContent = "Solution shown — now clear the box and try from memory!";
+        status.style.color = "var(--muted)";
+      });
+
+      if (won[key]) { ta.value = target; check(); }
+      else check();
+    });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initChallenges);
+  else initChallenges();
+
   /* ---------- copy buttons on every <pre> ---------- */
   document.querySelectorAll("pre").forEach(function (pre) {
     var btn = document.createElement("button");
