@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" class="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manim — Manim Slides Academy</title>
+<meta name="description" content="A free, offline, open-source course: LaTeX, Manim and manim-slides from zero — with interactive examples.">
+<link rel="stylesheet" href="assets/css/site.css">
+
+<script defer src="assets/js/site.js"></script>
+</head>
+<body>
+<header class="site"><div class="inner">
+  <a class="logo" href="index.html">Manim Slides <b>Academy</b></a>
+  <nav class="main"><a href="index.html">Home</a><a href="setup.html">Setup</a><a href="latex.html">1 · LaTeX</a><a href="manim.html">2 · Manim</a><a href="slides.html">3 · Slides</a></nav>
+</div></header>
+<main>
+
+<h1>Chapter 2 · Manim</h1>
+<p class="lead">Every example below shows the <b>exact code</b> on the left and the <b>real video it
+rendered</b> on the right — click any video to play it, click again to replay. About 3 hours total;
+each topic stands alone, so stop whenever you like.</p>
+<div class="toc"><b>Topics</b>
+<a href="#mnm-scene">1 Scenes &amp; Mobjects</a><a href="#mnm-anim">2 Animations</a>
+<a href="#mnm-pos">3 Positioning</a><a href="#mnm-style">4 Color &amp; styling</a>
+<a href="#mnm-updaters">5 Updaters</a><a href="#mnm-graphs">6 Graphs &amp; MathTex</a>
+<a href="#mnm-ex">✅ Self-exam</a></div>
+<h2 id="mnm-scene"><span class="tno">1</span>Scenes & Mobjects — the two words that explain everything<label class="donebox"><input type="checkbox" data-key="mnm-scene"> mark done</label></h2><p class="lead">
+A <b>Scene</b> is your canvas + timeline. A <b>Mobject</b> ("mathematical object") is anything drawable:
+circles, text, formulas, graphs. You subclass <code>Scene</code>, override <code>construct()</code>,
+and inside it you create mobjects and <code>play()</code> animations on them. That's the whole framework.</p><div class="example"><div class="head"><span class="lvl easy">EASY</span><span class="t">The smallest possible animation</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">from</span> manim <span class="tok-k">import</span> *
+
+<span class="tok-k">class</span> <span class="tok-cls">FirstCircle</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        circle = <span class="tok-cls">Circle</span>(radius=<span class="tok-n">1.5</span>, color=BLUE)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Create</span>(circle))
+        <span class="tok-k">self</span>.wait(<span class="tok-n">0.5</span>)</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/FirstCircle.mp4" poster="assets/video/FirstCircle.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small">Render it: <code>manim render -ql -p first.py FirstCircle</code></p></div></div></div></div><div class="example"><div class="head"><span class="lvl easy">EASY</span><span class="t">Two mobjects, two animations</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">SquareAndLabel</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        square = <span class="tok-cls">Square</span>(side_length=<span class="tok-n">2</span>, color=GREEN)
+        label = <span class="tok-cls">Text</span>(<span class="tok-s">"A square"</span>, font_size=<span class="tok-n">36</span>).next_to(square, DOWN)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Create</span>(square))
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Write</span>(label))
+        <span class="tok-k">self</span>.wait(<span class="tok-n">0.5</span>)</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/SquareAndLabel.mp4" poster="assets/video/SquareAndLabel.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small">Each <code>self.play(...)</code> is one beat of the timeline — they run in order.</p></div></div></div></div><div class="example"><div class="head"><span class="lvl hard">LEVEL UP</span><span class="t">VGroup: treat many mobjects as one</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">ShapeFamily</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        shapes = <span class="tok-cls">VGroup</span>(
+            <span class="tok-cls">Circle</span>(color=BLUE), <span class="tok-cls">Square</span>(color=GREEN),
+            <span class="tok-cls">Triangle</span>(color=YELLOW), <span class="tok-cls">Star</span>(color=RED),
+        ).arrange(RIGHT, buff=<span class="tok-n">0.8</span>).scale(<span class="tok-n">0.7</span>)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">LaggedStart</span>(*[<span class="tok-cls">Create</span>(s) <span class="tok-k">for</span> s <span class="tok-k">in</span> shapes],
+                              lag_ratio=<span class="tok-n">0.3</span>))</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/ShapeFamily.mp4" poster="assets/video/ShapeFamily.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small"><code>arrange</code> lays members out; <code>LaggedStart</code> staggers their animations.</p></div></div></div></div><div class="example"><div class="head"><span class="lvl hard">LEVEL UP</span><span class="t">Transform: one mobject, many forms</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">MorphingShapes</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        shape = <span class="tok-cls">Circle</span>(radius=<span class="tok-n">1.5</span>, color=BLUE)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Create</span>(shape))
+        <span class="tok-k">for</span> target <span class="tok-k">in</span> [<span class="tok-cls">Square</span>(side_length=<span class="tok-n">2.5</span>, color=GREEN),
+                       <span class="tok-cls">Triangle</span>(color=YELLOW).scale(<span class="tok-n">1.5</span>),
+                       <span class="tok-cls">RegularPolygon</span>(<span class="tok-n">6</span>, color=PURPLE).scale(<span class="tok-n">1.5</span>)]:
+            <span class="tok-k">self</span>.play(<span class="tok-cls">Transform</span>(shape, target))</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/MorphingShapes.mp4" poster="assets/video/MorphingShapes.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small"><code>Transform(a, b)</code> smoothly morphs a into b's shape.</p></div></div></div></div><h2 id="mnm-anim"><span class="tno">2</span>The animation vocabulary<label class="donebox"><input type="checkbox" data-key="mnm-anim"> mark done</label></h2><p class="lead">
+Manim ships dozens of animation classes, but you'll use about eight constantly:
+<code>Create</code>, <code>Write</code>, <code>FadeIn/FadeOut</code>, <code>Transform</code>,
+<code>GrowFromCenter</code>, <code>LaggedStart</code>, and the special <code>.animate</code> syntax.
+Multiple animations passed to one <code>play()</code> run <b>simultaneously</b>.</p><div class="example"><div class="head"><span class="lvl easy">EASY</span><span class="t">Write — the classic for text</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">HelloWrite</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        text = <span class="tok-cls">Text</span>(<span class="tok-s">"Hello, Manim!"</span>, font_size=<span class="tok-n">60</span>,
+                    gradient=(BLUE, TEAL))
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Write</span>(text))</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/HelloWrite.mp4" poster="assets/video/HelloWrite.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p></div></div></div></div><div class="example"><div class="head"><span class="lvl easy">EASY</span><span class="t">Parallel animations & directional fades</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">FadeAndGrow</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        circle = <span class="tok-cls">Circle</span>(color=BLUE, fill_opacity=<span class="tok-n">0.5</span>).shift(LEFT * <span class="tok-n">2.5</span>)
+        square = <span class="tok-cls">Square</span>(color=GREEN, fill_opacity=<span class="tok-n">0.5</span>).shift(RIGHT * <span class="tok-n">2.5</span>)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">FadeIn</span>(circle), <span class="tok-cls">GrowFromCenter</span>(square))  <span class="tok-c"># together!</span>
+        <span class="tok-k">self</span>.wait(<span class="tok-n">0.3</span>)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">FadeOut</span>(circle, shift=UP),
+                  <span class="tok-cls">FadeOut</span>(square, shift=DOWN))</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/FadeAndGrow.mp4" poster="assets/video/FadeAndGrow.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small">Two animations in one <code>play()</code> = simultaneous.</p></div></div></div></div><div class="example"><div class="head"><span class="lvl hard">LEVEL UP</span><span class="t">TransformMatchingShapes — smart morphing</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">WordMorph</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        a = <span class="tok-cls">Text</span>(<span class="tok-s">"mathematics"</span>, font_size=<span class="tok-n">56</span>)
+        b = <span class="tok-cls">Text</span>(<span class="tok-s">"animations"</span>, font_size=<span class="tok-n">56</span>, color=TEAL)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Write</span>(a))
+        <span class="tok-k">self</span>.play(<span class="tok-cls">TransformMatchingShapes</span>(a, b))</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/WordMorph.mp4" poster="assets/video/WordMorph.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small">Letters that exist in both words fly to their new positions.</p></div></div></div></div><div class="example"><div class="head"><span class="lvl hard">LEVEL UP</span><span class="t">LaggedStart + rate functions</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">RainDots</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        dots = <span class="tok-cls">VGroup</span>(*[<span class="tok-cls">Dot</span>(color=random_bright_color())
+                        .move_to([x, <span class="tok-n">3.5</span>, <span class="tok-n">0</span>])
+                        <span class="tok-k">for</span> x <span class="tok-k">in</span> np.linspace(-<span class="tok-n">6</span>, <span class="tok-n">6</span>, <span class="tok-n">25</span>)])
+        <span class="tok-k">self</span>.play(<span class="tok-cls">LaggedStart</span>(
+            *[d.animate.shift(DOWN * <span class="tok-n">7</span>) <span class="tok-k">for</span> d <span class="tok-k">in</span> dots],
+            lag_ratio=<span class="tok-n">0.05</span>, run_time=<span class="tok-n">2.5</span>,
+            rate_func=rate_functions.ease_in_quad))</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/RainDots.mp4" poster="assets/video/RainDots.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small"><code>rate_func</code> shapes the speed curve — ease_in_quad = accelerating, like gravity.</p></div></div></div></div><h2 id="mnm-pos"><span class="tno">3</span>Positioning: shift, next_to, arrange, paths<label class="donebox"><input type="checkbox" data-key="mnm-pos"> mark done</label></h2><p class="lead">
+The screen is a coordinate grid: origin at center, ~7 units left-right, ~4 up-down.
+Constants <code>UP, DOWN, LEFT, RIGHT</code> are unit vectors you can scale and add:
+<code>UP * 2 + RIGHT * 3</code> is just a point.</p><div class="example"><div class="head"><span class="lvl easy">EASY</span><span class="t">shift() — move by an offset</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">ShiftAround</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        dot = <span class="tok-cls">Dot</span>(color=YELLOW).scale(<span class="tok-n">2</span>)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">FadeIn</span>(dot))
+        <span class="tok-k">for</span> direction <span class="tok-k">in</span> [UP * <span class="tok-n">2</span>, RIGHT * <span class="tok-n">3</span>, DOWN * <span class="tok-n">4</span>,
+                          LEFT * <span class="tok-n">6</span>, UP * <span class="tok-n">2</span> + RIGHT * <span class="tok-n">3</span>]:
+            <span class="tok-k">self</span>.play(dot.animate.shift(direction), run_time=<span class="tok-n">0.5</span>)</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/ShiftAround.mp4" poster="assets/video/ShiftAround.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small"><code>.animate.shift()</code> animates the move; plain <code>.shift()</code> teleports before rendering.</p></div></div></div></div><div class="example"><div class="head"><span class="lvl easy">EASY</span><span class="t">next_to() — position relative to another mobject</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">NeighborLayout</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        center = <span class="tok-cls">Square</span>(color=BLUE)
+        up = <span class="tok-cls">Text</span>(<span class="tok-s">"above"</span>, font_size=<span class="tok-n">30</span>).next_to(center, UP)
+        down = <span class="tok-cls">Text</span>(<span class="tok-s">"below"</span>, font_size=<span class="tok-n">30</span>).next_to(center, DOWN)
+        left = <span class="tok-cls">Text</span>(<span class="tok-s">"left"</span>, font_size=<span class="tok-n">30</span>).next_to(center, LEFT)
+        right = <span class="tok-cls">Text</span>(<span class="tok-s">"right"</span>, font_size=<span class="tok-n">30</span>).next_to(center, RIGHT)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Create</span>(center))
+        <span class="tok-k">self</span>.play(<span class="tok-cls">FadeIn</span>(up), <span class="tok-cls">FadeIn</span>(down),
+                  <span class="tok-cls">FadeIn</span>(left), <span class="tok-cls">FadeIn</span>(right))</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/NeighborLayout.mp4" poster="assets/video/NeighborLayout.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small">Relative positioning survives refactors — move the square, labels follow (at creation time).</p></div></div></div></div><div class="example"><div class="head"><span class="lvl hard">LEVEL UP</span><span class="t">arrange_in_grid & re-arranging live</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">GridOfShapes</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        grid = <span class="tok-cls">VGroup</span>(*[
+            <span class="tok-cls">Circle</span>(radius=<span class="tok-n">0.3</span>, color=c, fill_opacity=<span class="tok-n">0.8</span>)
+            <span class="tok-k">for</span> c <span class="tok-k">in</span> [RED, ORANGE, YELLOW, GREEN, TEAL,
+                      BLUE, PURPLE, PINK, WHITE]
+        ]).arrange_in_grid(rows=<span class="tok-n">3</span>, cols=<span class="tok-n">3</span>, buff=<span class="tok-n">0.6</span>)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">LaggedStart</span>(*[<span class="tok-cls">GrowFromCenter</span>(s) <span class="tok-k">for</span> s <span class="tok-k">in</span> grid],
+                              lag_ratio=<span class="tok-n">0.1</span>))
+        <span class="tok-k">self</span>.play(grid.animate.arrange(RIGHT, buff=<span class="tok-n">0.25</span>).scale(<span class="tok-n">0.8</span>))</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/GridOfShapes.mp4" poster="assets/video/GridOfShapes.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small">A VGroup can be re-arranged as an animation — the layout itself animates.</p></div></div></div></div><div class="example"><div class="head"><span class="lvl hard">LEVEL UP</span><span class="t">MoveAlongPath — any mobject, any curve</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">OrbitingMoon</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        planet = <span class="tok-cls">Circle</span>(radius=<span class="tok-n">0.6</span>, color=BLUE, fill_opacity=<span class="tok-n">1</span>)
+        orbit = <span class="tok-cls">Circle</span>(radius=<span class="tok-n">2.2</span>, color=GREY).set_stroke(width=<span class="tok-n">2</span>)
+        moon = <span class="tok-cls">Dot</span>(color=WHITE).scale(<span class="tok-n">1.5</span>)
+        moon.move_to(orbit.point_from_proportion(<span class="tok-n">0</span>))
+        <span class="tok-k">self</span>.play(<span class="tok-cls">FadeIn</span>(planet), <span class="tok-cls">Create</span>(orbit), <span class="tok-cls">FadeIn</span>(moon))
+        <span class="tok-k">self</span>.play(<span class="tok-cls">MoveAlongPath</span>(moon, orbit),
+                  run_time=<span class="tok-n">3</span>, rate_func=linear)</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/OrbitingMoon.mp4" poster="assets/video/OrbitingMoon.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small">Any VMobject can be a path — circles, arcs, even hand-drawn Bezier curves.</p></div></div></div></div><h2 id="mnm-style"><span class="tno">4</span>Color & styling<label class="donebox"><input type="checkbox" data-key="mnm-style"> mark done</label></h2><p class="lead">
+Every mobject has a <b>stroke</b> (outline) and a <b>fill</b>. <code>color=</code> sets both;
+<code>fill_opacity=</code> reveals the fill (default 0!). Gradients work on both text and shapes.</p><div class="example"><div class="head"><span class="lvl easy">EASY</span><span class="t">Stroke, fill, and both</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">FillAndStroke</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        s1 = <span class="tok-cls">Square</span>(color=BLUE).shift(LEFT * <span class="tok-n">3</span>)   <span class="tok-c"># stroke only</span>
+        s2 = <span class="tok-cls">Square</span>(color=BLUE, fill_opacity=<span class="tok-n">1</span>)   <span class="tok-c"># filled</span>
+        s3 = <span class="tok-cls">Square</span>(fill_color=YELLOW, fill_opacity=<span class="tok-n">1</span>,
+                    stroke_color=RED, stroke_width=<span class="tok-n">8</span>).shift(RIGHT * <span class="tok-n">3</span>)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Create</span>(s1), <span class="tok-cls">Create</span>(s2), <span class="tok-cls">Create</span>(s3))</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/FillAndStroke.mp4" poster="assets/video/FillAndStroke.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small">The #1 beginner surprise: shapes are hollow until you set fill_opacity.</p></div></div></div></div><div class="example"><div class="head"><span class="lvl easy">EASY</span><span class="t">Gradients</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">GradientTitle</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        title = <span class="tok-cls">Text</span>(<span class="tok-s">"Gradients!"</span>, font_size=<span class="tok-n">72</span>,
+                     gradient=(RED, YELLOW, GREEN))
+        underline = <span class="tok-cls">Line</span>(LEFT * <span class="tok-n">3</span>, RIGHT * <span class="tok-n">3</span>).next_to(title, DOWN)
+        underline.set_color_by_gradient(RED, YELLOW, GREEN)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Write</span>(title), <span class="tok-cls">Create</span>(underline))</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/GradientTitle.mp4" poster="assets/video/GradientTitle.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p></div></div></div></div><div class="example"><div class="head"><span class="lvl hard">LEVEL UP</span><span class="t">Dashed lines & opacity for de-emphasis</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">DashAndOpacity</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        solid = <span class="tok-cls">Circle</span>(radius=<span class="tok-n">1.2</span>, color=TEAL).shift(LEFT * <span class="tok-n">3</span>)
+        dashed = <span class="tok-cls">DashedVMobject</span>(<span class="tok-cls">Circle</span>(radius=<span class="tok-n">1.2</span>, color=TEAL))
+        ghost = <span class="tok-cls">Circle</span>(radius=<span class="tok-n">1.2</span>, color=TEAL, fill_opacity=<span class="tok-n">0.25</span>,
+                       stroke_opacity=<span class="tok-n">0.4</span>).shift(RIGHT * <span class="tok-n">3</span>)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Create</span>(solid), <span class="tok-cls">Create</span>(dashed), <span class="tok-cls">FadeIn</span>(ghost))</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/DashAndOpacity.mp4" poster="assets/video/DashAndOpacity.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small">Low opacity = 'this is context, not the point' — a key visual-communication trick.</p></div></div></div></div><div class="example"><div class="head"><span class="lvl hard">LEVEL UP</span><span class="t">Gradient across a whole group + there_and_back</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">StyleWave</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        squares = <span class="tok-cls">VGroup</span>(*[<span class="tok-cls">Square</span>(side_length=<span class="tok-n">0.7</span>, fill_opacity=<span class="tok-n">0.9</span>)
+                           <span class="tok-k">for</span> _ <span class="tok-k">in</span> range(<span class="tok-n">10</span>)]).arrange(RIGHT, buff=<span class="tok-n">0.15</span>)
+        squares.set_color_by_gradient(PURPLE, TEAL, YELLOW)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">LaggedStart</span>(*[<span class="tok-cls">GrowFromCenter</span>(s) <span class="tok-k">for</span> s <span class="tok-k">in</span> squares],
+                              lag_ratio=<span class="tok-n">0.08</span>))
+        <span class="tok-k">self</span>.play(<span class="tok-cls">LaggedStart</span>(
+            *[s.animate.shift(UP * <span class="tok-n">0.8</span>).set_fill(WHITE)
+              <span class="tok-k">for</span> s <span class="tok-k">in</span> squares],
+            lag_ratio=<span class="tok-n">0.1</span>, rate_func=there_and_back, run_time=<span class="tok-n">2</span>))</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/StyleWave.mp4" poster="assets/video/StyleWave.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small"><code>there_and_back</code> plays the animation forward then in reverse — great for waves and pulses.</p></div></div></div></div><h2 id="mnm-updaters"><span class="tno">5</span>Updaters & ValueTracker — animations that react<label class="donebox"><input type="checkbox" data-key="mnm-updaters"> mark done</label></h2><p class="lead">
+So far every animation was pre-scripted. <b>Updaters</b> are little functions that run
+<em>every frame</em>: "keep this line attached to that dot", "keep this number equal to that value".
+<code>ValueTracker</code> holds a number you can animate; <code>always_redraw</code> rebuilds
+a mobject each frame. This combination is Manim's superpower.</p><div class="example"><div class="head"><span class="lvl easy">EASY</span><span class="t">A number that counts to 100</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">LiveCounter</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        value = <span class="tok-cls">ValueTracker</span>(<span class="tok-n">0</span>)
+        number = <span class="tok-cls">DecimalNumber</span>(<span class="tok-n">0</span>, num_decimal_places=<span class="tok-n">1</span>,
+                               font_size=<span class="tok-n">96</span>)
+        number.add_updater(
+            <span class="tok-k">lambda</span> m: m.set_value(value.get_value()))
+        <span class="tok-k">self</span>.add(number)
+        <span class="tok-k">self</span>.play(value.animate.set_value(<span class="tok-n">100</span>),
+                  run_time=<span class="tok-n">3</span>, rate_func=linear)</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/LiveCounter.mp4" poster="assets/video/LiveCounter.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small">You animate the tracker; the updater drags the number along every frame.</p></div></div></div></div><div class="example"><div class="head"><span class="lvl easy">EASY</span><span class="t">A rope that never lets go</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">DotChaser</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        anchor = <span class="tok-cls">Dot</span>(LEFT * <span class="tok-n">4</span>, color=BLUE).scale(<span class="tok-n">1.5</span>)
+        runner = <span class="tok-cls">Dot</span>(RIGHT * <span class="tok-n">4</span> + UP * <span class="tok-n">2</span>, color=YELLOW).scale(<span class="tok-n">1.5</span>)
+        rope = always_redraw(<span class="tok-k">lambda</span>: <span class="tok-cls">Line</span>(
+            anchor.get_center(), runner.get_center(), color=GREY))
+        <span class="tok-k">self</span>.add(anchor, runner, rope)
+        <span class="tok-k">self</span>.play(runner.animate.move_to(RIGHT * <span class="tok-n">4</span> + DOWN * <span class="tok-n">2</span>))
+        <span class="tok-k">self</span>.play(runner.animate.move_to(UP * <span class="tok-n">2.5</span>))</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/DotChaser.mp4" poster="assets/video/DotChaser.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small"><code>always_redraw</code> rebuilds the line every frame from live positions.</p></div></div></div></div><div class="example"><div class="head"><span class="lvl hard">LEVEL UP</span><span class="t">dt-updaters: perpetual motion</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">TickingClock</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        face = <span class="tok-cls">Circle</span>(radius=<span class="tok-n">2</span>, color=WHITE)
+        hand = <span class="tok-cls">Line</span>(ORIGIN, UP * <span class="tok-n">1.6</span>, color=YELLOW,
+                    stroke_width=<span class="tok-n">6</span>)
+        hand.add_updater(<span class="tok-k">lambda</span> m, dt:
+            m.rotate(-dt * PI / <span class="tok-n">2</span>, about_point=ORIGIN))
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Create</span>(face))
+        <span class="tok-k">self</span>.add(hand)
+        <span class="tok-k">self</span>.wait(<span class="tok-n">4</span>)   <span class="tok-c"># the hand keeps turning by itself!</span></code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/TickingClock.mp4" poster="assets/video/TickingClock.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small">An updater taking <code>(mobject, dt)</code> runs on wall-clock time — even during wait().</p></div></div></div></div><div class="example"><div class="head"><span class="lvl hard">LEVEL UP</span><span class="t">A live progress bar (three updaters cooperating)</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">GrowingBar</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        progress = <span class="tok-cls">ValueTracker</span>(<span class="tok-n">0</span>)
+        track = <span class="tok-cls">Rectangle</span>(width=<span class="tok-n">8</span>, height=<span class="tok-n">0.6</span>, color=GREY)
+        bar = always_redraw(<span class="tok-k">lambda</span>: <span class="tok-cls">Rectangle</span>(
+            width=max(progress.get_value() * <span class="tok-n">8</span>, <span class="tok-n">0.001</span>), height=<span class="tok-n">0.6</span>,
+            fill_color=TEAL, fill_opacity=<span class="tok-n">1</span>, stroke_width=<span class="tok-n">0</span>,
+        ).align_to(track, LEFT))
+        pct = always_redraw(<span class="tok-k">lambda</span>: <span class="tok-cls">Integer</span>(
+            int(progress.get_value() * <span class="tok-n">100</span>), unit=<span class="tok-s">r"\%"</span>,
+            font_size=<span class="tok-n">40</span>).next_to(track, UP))
+        <span class="tok-k">self</span>.add(track, bar, pct)
+        <span class="tok-k">self</span>.play(progress.animate.set_value(<span class="tok-n">1</span>), run_time=<span class="tok-n">3</span>,
+                  rate_func=rate_functions.ease_in_out_sine)</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/GrowingBar.mp4" poster="assets/video/GrowingBar.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small">One tracker drives both the bar's width and the percentage — single source of truth.</p></div></div></div></div><h2 id="mnm-graphs"><span class="tno">6</span>Graphs & MathTex — where LaTeX pays off<label class="donebox"><input type="checkbox" data-key="mnm-graphs"> mark done</label></h2><p class="lead">
+<code>Axes</code> gives you a coordinate system; <code>.plot()</code> draws functions on it;
+<code>MathTex</code> renders any LaTeX from Chapter 1 as an animatable mobject.
+This is the toolkit of every math explainer video you've ever watched.</p><div class="example"><div class="head"><span class="lvl easy">EASY</span><span class="t">Plot a sine wave</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">SinePlot</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        axes = <span class="tok-cls">Axes</span>(x_range=[-<span class="tok-n">4</span>, <span class="tok-n">4</span>], y_range=[-<span class="tok-n">2</span>, <span class="tok-n">2</span>],
+                    x_length=<span class="tok-n">10</span>, y_length=<span class="tok-n">5</span>)
+        curve = axes.plot(<span class="tok-k">lambda</span> x: np.sin(x), color=YELLOW)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Create</span>(axes))
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Create</span>(curve), run_time=<span class="tok-n">2</span>)</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/SinePlot.mp4" poster="assets/video/SinePlot.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small"><code>plot()</code> takes any Python function of x.</p></div></div></div></div><div class="example"><div class="head"><span class="lvl easy">EASY</span><span class="t">Your LaTeX, animated</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">EulerFormula</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        formula = <span class="tok-cls">MathTex</span>(<span class="tok-s">r"e^{i\pi} + 1 = 0"</span>, font_size=<span class="tok-n">96</span>)
+        name = <span class="tok-cls">Text</span>(<span class="tok-s">"Euler's identity"</span>, font_size=<span class="tok-n">32</span>,
+                    color=GREY).next_to(formula, DOWN)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Write</span>(formula))
+        <span class="tok-k">self</span>.play(<span class="tok-cls">FadeIn</span>(name))</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/EulerFormula.mp4" poster="assets/video/EulerFormula.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small">Everything from Chapter 1 works inside MathTex — always with the r prefix.</p></div></div></div></div><div class="example"><div class="head"><span class="lvl hard">LEVEL UP</span><span class="t">Riemann rectangles refining themselves</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">RiemannIntro</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        axes = <span class="tok-cls">Axes</span>(x_range=[<span class="tok-n">0</span>, <span class="tok-n">4</span>], y_range=[<span class="tok-n">0</span>, <span class="tok-n">9</span>],
+                    x_length=<span class="tok-n">9</span>, y_length=<span class="tok-n">5</span>)
+        curve = axes.plot(<span class="tok-k">lambda</span> x: x**<span class="tok-n">2</span> * <span class="tok-n">0.55</span> + <span class="tok-n">0.5</span>, color=TEAL)
+        rects = axes.get_riemann_rectangles(
+            curve, x_range=[<span class="tok-n">0</span>, <span class="tok-n">4</span>], dx=<span class="tok-n">0.5</span>, fill_opacity=<span class="tok-n">0.7</span>)
+        fine = axes.get_riemann_rectangles(
+            curve, x_range=[<span class="tok-n">0</span>, <span class="tok-n">4</span>], dx=<span class="tok-n">0.125</span>, fill_opacity=<span class="tok-n">0.7</span>)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Create</span>(axes), <span class="tok-cls">Create</span>(curve))
+        <span class="tok-k">self</span>.play(<span class="tok-cls">FadeIn</span>(rects))
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Transform</span>(rects, fine))</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/RiemannIntro.mp4" poster="assets/video/RiemannIntro.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small">Transforming coarse rectangles into fine ones IS the idea of integration, visually.</p></div></div></div></div><div class="example"><div class="head"><span class="lvl hard">LEVEL UP</span><span class="t">A tangent line sliding along a curve</span></div><div class="body"><div class="vid-split"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">TangentSlide</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        axes = <span class="tok-cls">Axes</span>(x_range=[-<span class="tok-n">3</span>, <span class="tok-n">3</span>], y_range=[-<span class="tok-n">1</span>, <span class="tok-n">8</span>],
+                    x_length=<span class="tok-n">10</span>, y_length=<span class="tok-n">5.5</span>)
+        curve = axes.plot(<span class="tok-k">lambda</span> x: <span class="tok-n">0.6</span> * x**<span class="tok-n">2</span> + <span class="tok-n">0.4</span>, color=YELLOW)
+        x = <span class="tok-cls">ValueTracker</span>(-<span class="tok-n">2.2</span>)
+        tangent = always_redraw(<span class="tok-k">lambda</span>: <span class="tok-cls">TangentLine</span>(
+            curve, alpha=(x.get_value() + <span class="tok-n">3</span>) / <span class="tok-n">6</span>,
+            length=<span class="tok-n">4</span>, color=RED))
+        dot = always_redraw(<span class="tok-k">lambda</span>: <span class="tok-cls">Dot</span>(color=RED).move_to(
+            axes.c2p(x.get_value(),
+                     <span class="tok-n">0.6</span> * x.get_value()**<span class="tok-n">2</span> + <span class="tok-n">0.4</span>)))
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Create</span>(axes), <span class="tok-cls">Create</span>(curve))
+        <span class="tok-k">self</span>.add(tangent, dot)
+        <span class="tok-k">self</span>.play(x.animate.set_value(<span class="tok-n">2.2</span>), run_time=<span class="tok-n">3</span>,
+                  rate_func=linear)</code></pre></div><div><video muted playsinline controls preload="none" data-src="assets/video/TangentSlide.mp4" poster="assets/video/TangentSlide.jpg" title="Click to play / replay"></video><p class="muted small" style="margin:6px 0 0">▶ click the video to play — click again to replay</p><p class="muted small">Updaters (topic 5) + graphs (topic 6) = the derivative, animated. This exact scene becomes a slide deck in Chapter 3.</p></div></div></div></div>
+<h2 id="mnm-ex">Self-examination</h2>
+<div class="exercise"><div class="q">Why does a Circle appear as just an outline by default?</div><div class="quiz" data-why="Shapes have fill_opacity=0 by default — set it to see the fill."><label><input type="radio" name="q56741">Manim only draws outlines</label><label data-right><input type="radio" name="q56741">fill_opacity defaults to 0</label><label><input type="radio" name="q56741">You forgot Create()</label><label><input type="radio" name="q56741">The fill color defaults to black</label><div class="verdict"></div></div></div><div class="exercise"><div class="q">What's the difference between circle.shift(UP) and circle.animate.shift(UP) inside play()?</div><div class="quiz" data-why="Plain method calls change state immediately; .animate turns the change into an animation."><label><input type="radio" name="q76094">No difference</label><label><input type="radio" name="q76094">The first is faster</label><label data-right><input type="radio" name="q76094">.animate produces a smooth animation; the plain call moves it instantly</label><label><input type="radio" name="q76094">.animate moves it twice as far</label><div class="verdict"></div></div></div><div class="exercise"><div class="q">You want a label to follow a moving dot for the whole scene. Best tool?</div><div class="quiz" data-why="Updaters run every frame — that's exactly what 'follow' means. (A VGroup works only if you move the group itself.)"><label><input type="radio" name="q8012">Call next_to() once before play()</label><label data-right><input type="radio" name="q8012">An updater / always_redraw</label><label><input type="radio" name="q8012">Transform the label every frame manually</label><label><input type="radio" name="q8012">A VGroup</label><div class="verdict"></div></div></div><div class="exercise"><div class="q">Write a scene where a red square grows from the center, slides right 3 units, then fades out upward. (Three plays, or fewer!)</div><details class="answer"><summary>show solution</summary><div class="inner"><pre><code><span class="tok-k">class</span> <span class="tok-cls">Ex1</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        sq = <span class="tok-cls">Square</span>(color=RED, fill_opacity=<span class="tok-n">0.8</span>)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">GrowFromCenter</span>(sq))
+        <span class="tok-k">self</span>.play(sq.animate.shift(RIGHT * <span class="tok-n">3</span>))
+        <span class="tok-k">self</span>.play(<span class="tok-cls">FadeOut</span>(sq, shift=UP))</code></pre></div></details></div><div class="exercise"><div class="q">Make a DecimalNumber that counts DOWN from 10 to 0 in 5 seconds while turning from white to red. (Hint: two updaters or one updater + .animate.set_color.)</div><details class="answer"><summary>show solution</summary><div class="inner"><pre><code><span class="tok-k">class</span> <span class="tok-cls">Countdown</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        t = <span class="tok-cls">ValueTracker</span>(<span class="tok-n">10</span>)
+        num = <span class="tok-cls">DecimalNumber</span>(<span class="tok-n">10</span>, num_decimal_places=<span class="tok-n">1</span>, font_size=<span class="tok-n">96</span>)
+        num.add_updater(<span class="tok-k">lambda</span> m: m.set_value(t.get_value()))
+        <span class="tok-k">self</span>.add(num)
+        <span class="tok-k">self</span>.play(t.animate.set_value(<span class="tok-n">0</span>),
+                  num.animate.set_color(RED),
+                  run_time=<span class="tok-n">5</span>, rate_func=linear)</code></pre></div></details></div><div class="exercise"><div class="q">Plot y = x³ − 3x on axes from −3 to 3 and animate a dot moving along the curve from left to right. (Hint: ValueTracker + always_redraw + axes.c2p.)</div><details class="answer"><summary>show solution</summary><div class="inner"><pre><code><span class="tok-k">class</span> <span class="tok-cls">CubicDot</span>(Scene):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        axes = <span class="tok-cls">Axes</span>(x_range=[-<span class="tok-n">3</span>, <span class="tok-n">3</span>], y_range=[-<span class="tok-n">4</span>, <span class="tok-n">4</span>],
+                    x_length=<span class="tok-n">10</span>, y_length=<span class="tok-n">5.5</span>)
+        f = <span class="tok-k">lambda</span> x: x**<span class="tok-n">3</span> - <span class="tok-n">3</span> * x
+        curve = axes.plot(f, color=TEAL)
+        x = <span class="tok-cls">ValueTracker</span>(-<span class="tok-n">2.2</span>)
+        dot = always_redraw(<span class="tok-k">lambda</span>: <span class="tok-cls">Dot</span>(color=YELLOW).move_to(
+            axes.c2p(x.get_value(), f(x.get_value()))))
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Create</span>(axes), <span class="tok-cls">Create</span>(curve))
+        <span class="tok-k">self</span>.add(dot)
+        <span class="tok-k">self</span>.play(x.animate.set_value(<span class="tok-n">2.2</span>), run_time=<span class="tok-n">4</span>)</code></pre></div></details></div>
+<div class="pager">
+  <a href="latex.html"><span class="dir">← Previous</span>1 · LaTeX</a>
+  <a href="slides.html" class="right"><span class="dir">Next chapter →</span>3 · manim-slides</a>
+</div>
+
+</main>
+<footer class="site">
+  <p>Manim Slides Academy — open source (MIT), <b>AI-generated</b> content, human-reviewed examples that all actually render.<br>
+  Works 100% offline · No trackers, no cookies, no network requests ·
+  <a href="https://github.com/">Contribute on GitHub</a></p>
+</footer>
+</body>
+</html>

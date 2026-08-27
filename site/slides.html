@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" class="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>manim-slides — Manim Slides Academy</title>
+<meta name="description" content="A free, offline, open-source course: LaTeX, Manim and manim-slides from zero — with interactive examples.">
+<link rel="stylesheet" href="assets/css/site.css">
+
+<script defer src="assets/js/site.js"></script>
+</head>
+<body>
+<header class="site"><div class="inner">
+  <a class="logo" href="index.html">Manim Slides <b>Academy</b></a>
+  <nav class="main"><a href="index.html">Home</a><a href="setup.html">Setup</a><a href="latex.html">1 · LaTeX</a><a href="manim.html">2 · Manim</a><a href="slides.html">3 · Slides</a></nav>
+</div></header>
+<main>
+
+<h1>Chapter 3 · manim-slides</h1>
+<p class="lead">The payoff chapter: your animations become presentations. The decks below are
+<b>real interactive presentations</b> — click one open, then click / press <kbd>→</kbd> inside it
+to advance, exactly like your audience would.</p>
+<div class="toc"><b>Topics</b>
+<a href="#sld-first">1 Scene → Slide</a><a href="#sld-run">2 Render, present, export</a>
+<a href="#sld-craft">3 Slide craft</a><a href="#sld-ex">✅ Self-exam</a></div>
+<h2 id="sld-first"><span class="tno">1</span>From Scene to Slide — one import, one call<label class="donebox"><input type="checkbox" data-key="sld-first"> mark done</label></h2><p class="lead">
+Change <code>Scene</code> to <code>Slide</code> (from manim_slides) and call
+<code>self.next_slide()</code> wherever the presentation should <b>pause and wait for you</b>.
+Everything you know from Chapter 2 still works — a Slide <em>is</em> a Scene.</p><div class="example"><div class="head"><span class="lvl easy">EASY</span><span class="t">Your first deck (this one is real — click through it!)</span></div><div class="body"><div><pre><code><span class="tok-k">from</span> manim <span class="tok-k">import</span> *
+<span class="tok-k">from</span> manim_slides <span class="tok-k">import</span> Slide
+
+<span class="tok-k">class</span> <span class="tok-cls">FirstDeck</span>(Slide):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        title = <span class="tok-cls">Text</span>(<span class="tok-s">"My first deck"</span>, font_size=<span class="tok-n">60</span>)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Write</span>(title))
+        <span class="tok-k">self</span>.next_slide()          <span class="tok-c"># ⏸ waits for your click</span>
+
+        <span class="tok-k">self</span>.play(title.animate.scale(<span class="tok-n">0.5</span>).to_edge(UP))
+        body = <span class="tok-cls">Text</span>(<span class="tok-s">"Click / press → to advance"</span>,
+                    font_size=<span class="tok-n">36</span>, color=GREY)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">FadeIn</span>(body))
+        <span class="tok-k">self</span>.next_slide()          <span class="tok-c"># ⏸ waits again</span>
+
+        <span class="tok-k">self</span>.play(<span class="tok-cls">FadeOut</span>(title), <span class="tok-cls">FadeOut</span>(body))</code></pre><button class="deck-launch" data-deck="assets/decks/FirstDeck.html" type="button"><span class="big">🎬</span><span>Click to open the interactive deck — then use <b>&nbsp;→&nbsp;</b> / click to advance</span></button><p class="muted small">Render + convert: <code>manim-slides render deck.py FirstDeck</code> then <code>manim-slides convert --to html --offline FirstDeck out.html</code> — or press ▶ with the VS Code extension and it's all automatic.</p></div></div></div><div class="example"><div class="head"><span class="lvl easy">EASY</span><span class="t">Bullet points that appear on YOUR click</span></div><div class="body"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">TwoPoints</span>(Slide):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        head = <span class="tok-cls">Text</span>(<span class="tok-s">"Why animate slides?"</span>, font_size=<span class="tok-n">48</span>).to_edge(UP)
+        p1 = <span class="tok-cls">Text</span>(<span class="tok-s">"1. Motion guides attention"</span>,
+                  font_size=<span class="tok-n">34</span>, color=TEAL).shift(UP * <span class="tok-n">0.5</span>)
+        p2 = <span class="tok-cls">Text</span>(<span class="tok-s">"2. Steps appear when YOU decide"</span>,
+                  font_size=<span class="tok-n">34</span>, color=YELLOW).next_to(p1, DOWN, buff=<span class="tok-n">0.6</span>)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Write</span>(head))
+        <span class="tok-k">self</span>.next_slide()
+        <span class="tok-k">self</span>.play(<span class="tok-cls">FadeIn</span>(p1, shift=RIGHT))
+        <span class="tok-k">self</span>.next_slide()
+        <span class="tok-k">self</span>.play(<span class="tok-cls">FadeIn</span>(p2, shift=RIGHT))
+        <span class="tok-k">self</span>.next_slide()
+        <span class="tok-k">self</span>.play(<span class="tok-cls">FadeOut</span>(head), <span class="tok-cls">FadeOut</span>(p1), <span class="tok-cls">FadeOut</span>(p2))</code></pre><button class="deck-launch" data-deck="assets/decks/TwoPoints.html" type="button"><span class="big">🎬</span><span>Click to open the interactive deck — then use <b>&nbsp;→&nbsp;</b> / click to advance</span></button><p class="muted small">The pattern for every talk: reveal → pause → reveal → pause.</p></div></div></div><div class="example"><div class="head"><span class="lvl hard">LEVEL UP</span><span class="t">Looping slides — ambient motion while you talk</span></div><div class="body"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">LoopingLogo</span>(Slide):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        logo = <span class="tok-cls">RegularPolygon</span>(<span class="tok-n">6</span>, color=TEAL,
+                              fill_opacity=<span class="tok-n">0.4</span>).scale(<span class="tok-n">1.5</span>)
+        label = <span class="tok-cls">Text</span>(<span class="tok-s">"loop=True keeps this spinning"</span>,
+                     font_size=<span class="tok-n">30</span>).to_edge(DOWN)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Create</span>(logo), <span class="tok-cls">FadeIn</span>(label))
+
+        <span class="tok-k">self</span>.next_slide(loop=<span class="tok-k">True</span>)   <span class="tok-c"># ⟳ loops until you advance</span>
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Rotate</span>(logo, TAU, run_time=<span class="tok-n">3</span>,
+                         rate_func=linear))
+
+        <span class="tok-k">self</span>.next_slide()
+        <span class="tok-k">self</span>.play(<span class="tok-cls">FadeOut</span>(logo), <span class="tok-cls">FadeOut</span>(label))</code></pre><button class="deck-launch" data-deck="assets/decks/LoopingLogo.html" type="button"><span class="big">🎬</span><span>Click to open the interactive deck — then use <b>&nbsp;→&nbsp;</b> / click to advance</span></button><p class="muted small">loop=True replays that segment forever — perfect for title slides while the audience settles.</p></div></div></div><div class="example"><div class="head"><span class="lvl hard">LEVEL UP</span><span class="t">A real mini-lecture: LaTeX + graph + updater, as slides</span></div><div class="body"><div><pre><code><span class="tok-k">class</span> <span class="tok-cls">MathLecture</span>(Slide):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        title = <span class="tok-cls">Text</span>(<span class="tok-s">"The derivative"</span>, font_size=<span class="tok-n">54</span>)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Write</span>(title))
+        <span class="tok-k">self</span>.next_slide()
+
+        <span class="tok-k">self</span>.play(title.animate.scale(<span class="tok-n">0.55</span>).to_edge(UP))
+        definition = <span class="tok-cls">MathTex</span>(
+            <span class="tok-s">r"f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}"</span>,
+            font_size=<span class="tok-n">54</span>)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Write</span>(definition))
+        <span class="tok-k">self</span>.next_slide()
+
+        <span class="tok-k">self</span>.play(definition.animate.scale(<span class="tok-n">0.7</span>).shift(UP * <span class="tok-n">1.6</span>))
+        axes = <span class="tok-cls">Axes</span>(x_range=[-<span class="tok-n">2.5</span>, <span class="tok-n">2.5</span>], y_range=[-<span class="tok-n">0.5</span>, <span class="tok-n">4</span>],
+                    x_length=<span class="tok-n">8</span>, y_length=<span class="tok-n">3.2</span>).shift(DOWN * <span class="tok-n">1.2</span>)
+        curve = axes.plot(<span class="tok-k">lambda</span> x: <span class="tok-n">0.55</span> * x**<span class="tok-n">2</span> + <span class="tok-n">0.3</span>,
+                          color=YELLOW)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Create</span>(axes), <span class="tok-cls">Create</span>(curve))
+        <span class="tok-k">self</span>.next_slide()
+
+        x = <span class="tok-cls">ValueTracker</span>(-<span class="tok-n">1.8</span>)
+        tangent = always_redraw(<span class="tok-k">lambda</span>: <span class="tok-cls">TangentLine</span>(
+            curve, alpha=(x.get_value() + <span class="tok-n">2.5</span>) / <span class="tok-n">5</span>,
+            length=<span class="tok-n">3.5</span>, color=RED))
+        <span class="tok-k">self</span>.add(tangent)
+        <span class="tok-k">self</span>.play(x.animate.set_value(<span class="tok-n">1.8</span>), run_time=<span class="tok-n">3</span>,
+                  rate_func=linear)
+        <span class="tok-k">self</span>.next_slide()
+        <span class="tok-k">self</span>.play(*[<span class="tok-cls">FadeOut</span>(m) <span class="tok-k">for</span> m <span class="tok-k">in</span>
+                    [title, definition, axes, curve, tangent]])</code></pre><button class="deck-launch" data-deck="assets/decks/MathLecture.html" type="button"><span class="big">🎬</span><span>Click to open the interactive deck — then use <b>&nbsp;→&nbsp;</b> / click to advance</span></button><p class="muted small">All three chapters in one deck: Chapter-1 LaTeX, Chapter-2 graphs & updaters, Chapter-3 pauses.</p></div></div></div><h2 id="sld-run"><span class="tno">2</span>Rendering, presenting, exporting<label class="donebox"><input type="checkbox" data-key="sld-run"> mark done</label></h2><p class="lead">
+Three commands cover the whole lifecycle — and if you use the VS Code extension,
+the first two happen automatically every time you save.</p><pre><code><span class="tok-c"># 1. RENDER — runs Manim + records where the pauses are</span>
+<span class="tok-f">manim-slides</span> render lecture.py MathLecture
+
+<span class="tok-c"># 2. PRESENT — three ways to show it:</span>
+<span class="tok-f">manim-slides</span> present MathLecture              # native window (PySide6) — best in-person
+<span class="tok-f">manim-slides</span> convert --to html --offline MathLecture out.html   # browser deck — best to share
+<span class="tok-c"># ...or the VS Code extension's live preview          — best while authoring</span>
+
+<span class="tok-c"># 3. EXPORT — hand it to PowerPoint people:</span>
+<span class="tok-f">manim-slides</span> convert --to pptx MathLecture lecture.pptx</code></pre>
+<table>
+<tr><th>Target</th><th>Best for</th><th>Offline?</th></tr>
+<tr><td>Native GUI (<code>present</code>)</td><td>Presenting in person — instant start, presenter hotkeys</td><td>always</td></tr>
+<tr><td>HTML (<code>convert --to html --offline</code>)</td><td>Sharing a link/file; works on any machine with a browser</td><td>with <code>--offline</code></td></tr>
+<tr><td>PowerPoint (<code>--to pptx</code>)</td><td>Venues that demand .pptx; embeds auto-playing videos</td><td>always</td></tr>
+</table>
+<div class="tip"><b>Presenter hotkeys (native GUI)</b> <kbd>→</kbd>/<kbd>Space</kbd> next ·
+<kbd>←</kbd> previous · <kbd>F</kbd> fullscreen · <kbd>R</kbd> replay current · <kbd>Q</kbd> quit.
+In the HTML version: same arrows, plus <kbd>Esc</kbd> for slide overview.</div><h2 id="sld-craft"><span class="tno">3</span>Slide craft — patterns that make decks feel professional<label class="donebox"><input type="checkbox" data-key="sld-craft"> mark done</label></h2><p class="lead">
+Four battle-tested patterns. None require new API — just discipline in how you use
+<code>next_slide()</code> and FadeOut.</p><h3>Pattern 1 — Clean between sections</h3><pre><code><span class="tok-k">self</span>.next_slide()
+<span class="tok-k">self</span>.play(*[<span class="tok-cls">FadeOut</span>(m) <span class="tok-k">for</span> m <span class="tok-k">in</span> <span class="tok-k">self</span>.mobjects])   <span class="tok-c"># wipe everything</span>
+<span class="tok-c"># ...start the next section on a clean canvas</span></code></pre>
+<h3>Pattern 2 — Title that shrinks into a header</h3><pre><code>title = <span class="tok-cls">Text</span>(<span class="tok-s">"Big opening title"</span>, font_size=<span class="tok-n">64</span>)
+<span class="tok-k">self</span>.play(<span class="tok-cls">Write</span>(title))
+<span class="tok-k">self</span>.next_slide()
+<span class="tok-k">self</span>.play(title.animate.scale(<span class="tok-n">0.5</span>).to_edge(UP))   <span class="tok-c"># becomes the header</span></code></pre>
+<h3>Pattern 3 — The loop-while-talking title slide</h3><pre><code><span class="tok-k">self</span>.next_slide(loop=<span class="tok-k">True</span>)     <span class="tok-c"># ambient motion, zero pressure</span>
+<span class="tok-k">self</span>.play(<span class="tok-cls">Rotate</span>(star, TAU, run_time=<span class="tok-n">4</span>, rate_func=linear))
+<span class="tok-k">self</span>.next_slide()              <span class="tok-c"># advances when YOU are ready</span></code></pre>
+<h3>Pattern 4 — Highlight, then un-highlight</h3><pre><code><span class="tok-k">self</span>.play(formula[<span class="tok-n">2</span>].animate.set_color(YELLOW))   <span class="tok-c"># spotlight one term</span>
+<span class="tok-k">self</span>.next_slide()
+<span class="tok-k">self</span>.play(formula[<span class="tok-n">2</span>].animate.set_color(WHITE))    <span class="tok-c"># release attention</span></code></pre>
+<div class="note"><b>Rule of thumb</b> One idea per slide segment; if you're saying "and also" twice
+about the same screen, split it with another <code>next_slide()</code>. Pauses are free — confusion isn't.</div>
+<h2 id="sld-ex">Self-examination</h2>
+<div class="exercise"><div class="q">What does self.next_slide() actually do?</div><div class="quiz" data-why="It records a boundary — everything between two next_slide() calls plays as one segment."><label><input type="radio" name="q97375">Renders the next scene file</label><label data-right><input type="radio" name="q97375">Marks a pause point: playback stops there until the presenter advances</label><label><input type="radio" name="q97375">Creates a new blank slide</label><label><input type="radio" name="q97375">Skips the next animation</label><div class="verdict"></div></div></div><div class="exercise"><div class="q">Your talk venue has no internet. Which export is safest?</div><div class="quiz" data-why="--offline bundles Reveal.js locally; the default fetches it from a CDN and shows a blank page without internet."><label><input type="radio" name="q95545">convert --to html (default)</label><label data-right><input type="radio" name="q95545">convert --to html --offline</label><label><input type="radio" name="q95545">A YouTube link</label><label><input type="radio" name="q95545">Any of them</label><div class="verdict"></div></div></div><div class="exercise"><div class="q">What happens between self.next_slide(loop=True) and the following next_slide()?</div><div class="quiz" data-why="loop=True makes just that segment cycle — ideal for ambient title slides."><label><input type="radio" name="q69347">The whole deck restarts</label><label><input type="radio" name="q69347">Nothing renders</label><label data-right><input type="radio" name="q69347">That segment replays forever until the presenter advances</label><label><input type="radio" name="q69347">The video plays backwards</label><div class="verdict"></div></div></div><div class="exercise"><div class="q">Convert this Chapter-2 scene into a 3-pause deck: Write a title → pause → draw a sine curve on axes → pause → fade everything out. Use the sine example from Chapter 2 as your starting point.</div><details class="answer"><summary>show solution</summary><div class="inner"><pre><code><span class="tok-k">from</span> manim <span class="tok-k">import</span> *
+<span class="tok-k">from</span> manim_slides <span class="tok-k">import</span> Slide
+
+<span class="tok-k">class</span> <span class="tok-cls">SineDeck</span>(Slide):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        title = <span class="tok-cls">Text</span>(<span class="tok-s">"The sine wave"</span>, font_size=<span class="tok-n">56</span>)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Write</span>(title))
+        <span class="tok-k">self</span>.next_slide()
+
+        <span class="tok-k">self</span>.play(title.animate.scale(<span class="tok-n">0.5</span>).to_edge(UP))
+        axes = <span class="tok-cls">Axes</span>(x_range=[-<span class="tok-n">4</span>, <span class="tok-n">4</span>], y_range=[-<span class="tok-n">2</span>, <span class="tok-n">2</span>],
+                    x_length=<span class="tok-n">10</span>, y_length=<span class="tok-n">5</span>)
+        curve = axes.plot(<span class="tok-k">lambda</span> x: np.sin(x), color=YELLOW)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Create</span>(axes))
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Create</span>(curve), run_time=<span class="tok-n">2</span>)
+        <span class="tok-k">self</span>.next_slide()
+
+        <span class="tok-k">self</span>.play(*[<span class="tok-cls">FadeOut</span>(m) <span class="tok-k">for</span> m <span class="tok-k">in</span> <span class="tok-k">self</span>.mobjects])</code></pre></div></details></div><div class="exercise"><div class="q">Make a deck whose first slide loops a pulsing circle (scale up and back, there_and_back) until you advance. (Hint: next_slide(loop=True).)</div><details class="answer"><summary>show solution</summary><div class="inner"><pre><code><span class="tok-k">class</span> <span class="tok-cls">PulseTitle</span>(Slide):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        c = <span class="tok-cls">Circle</span>(radius=<span class="tok-n">1.5</span>, color=TEAL, fill_opacity=<span class="tok-n">0.4</span>)
+        title = <span class="tok-cls">Text</span>(<span class="tok-s">"Ready?"</span>, font_size=<span class="tok-n">48</span>).next_to(c, DOWN)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Create</span>(c), <span class="tok-cls">Write</span>(title))
+        <span class="tok-k">self</span>.next_slide(loop=<span class="tok-k">True</span>)
+        <span class="tok-k">self</span>.play(c.animate.scale(<span class="tok-n">1.25</span>), rate_func=there_and_back,
+                  run_time=<span class="tok-n">1.6</span>)
+        <span class="tok-k">self</span>.next_slide()
+        <span class="tok-k">self</span>.play(<span class="tok-cls">FadeOut</span>(c), <span class="tok-cls">FadeOut</span>(title))</code></pre></div></details></div><div class="exercise"><div class="q">Final project: build a 5-slide deck teaching the quadratic formula — title (looping), the formula (Chapter 1 LaTeX), a parabola plot with its roots marked (Chapter 2), highlight the discriminant in yellow, clean fade-out. Then export it to BOTH offline HTML and pptx.</div><details class="answer"><summary>show solution</summary><div class="inner"><pre><code><span class="tok-k">class</span> <span class="tok-cls">QuadraticTalk</span>(Slide):
+    <span class="tok-k">def</span> construct(<span class="tok-k">self</span>):
+        <span class="tok-c"># 1 — looping title</span>
+        title = <span class="tok-cls">Text</span>(<span class="tok-s">"The Quadratic Formula"</span>, font_size=<span class="tok-n">54</span>)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Write</span>(title))
+        <span class="tok-k">self</span>.next_slide(loop=<span class="tok-k">True</span>)
+        <span class="tok-k">self</span>.play(title.animate.set_color(TEAL),
+                  rate_func=there_and_back, run_time=<span class="tok-n">2</span>)
+        <span class="tok-k">self</span>.next_slide()
+        <span class="tok-k">self</span>.play(title.animate.scale(<span class="tok-n">0.5</span>).to_edge(UP))
+
+        <span class="tok-c"># 2 — the formula</span>
+        f = <span class="tok-cls">MathTex</span>(<span class="tok-s">r"x = \frac{-b \pm \sqrt{b^2-4ac}}{2a}"</span>,
+                    font_size=<span class="tok-n">64</span>)
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Write</span>(f))
+        <span class="tok-k">self</span>.next_slide()
+
+        <span class="tok-c"># 3 — parabola with roots</span>
+        <span class="tok-k">self</span>.play(f.animate.scale(<span class="tok-n">0.6</span>).shift(UP * <span class="tok-n">1.8</span>))
+        ax = <span class="tok-cls">Axes</span>(x_range=[-<span class="tok-n">4</span>, <span class="tok-n">2</span>], y_range=[-<span class="tok-n">3</span>, <span class="tok-n">5</span>],
+                  x_length=<span class="tok-n">8</span>, y_length=<span class="tok-n">3.4</span>).shift(DOWN * <span class="tok-n">1.2</span>)
+        curve = ax.plot(<span class="tok-k">lambda</span> x: x**<span class="tok-n">2</span> + <span class="tok-n">2</span>*x - <span class="tok-n">2</span>, color=YELLOW)
+        roots = <span class="tok-cls">VGroup</span>(*[<span class="tok-cls">Dot</span>(ax.c2p(r, <span class="tok-n">0</span>), color=RED)
+            <span class="tok-k">for</span> r <span class="tok-k">in</span> (-<span class="tok-n">1</span> - <span class="tok-n">3</span>**<span class="tok-n">0.5</span>, -<span class="tok-n">1</span> + <span class="tok-n">3</span>**<span class="tok-n">0.5</span>)])
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Create</span>(ax), <span class="tok-cls">Create</span>(curve))
+        <span class="tok-k">self</span>.play(<span class="tok-cls">FadeIn</span>(roots, scale=<span class="tok-n">3</span>))
+        <span class="tok-k">self</span>.next_slide()
+
+        <span class="tok-c"># 4 — highlight the discriminant b²-4ac</span>
+        <span class="tok-k">self</span>.play(<span class="tok-cls">Indicate</span>(f, color=YELLOW))
+        <span class="tok-k">self</span>.next_slide()
+
+        <span class="tok-c"># 5 — clean exit</span>
+        <span class="tok-k">self</span>.play(*[<span class="tok-cls">FadeOut</span>(m) <span class="tok-k">for</span> m <span class="tok-k">in</span> <span class="tok-k">self</span>.mobjects])
+
+<span class="tok-c"># terminal:</span>
+<span class="tok-c">#   manim-slides render talk.py QuadraticTalk</span>
+<span class="tok-c">#   manim-slides convert --to html --offline QuadraticTalk talk.html</span>
+<span class="tok-c">#   manim-slides convert --to pptx QuadraticTalk talk.pptx</span></code></pre></div></details></div>
+<div class="pager">
+  <a href="manim.html"><span class="dir">← Previous</span>2 · Manim</a>
+  <a href="index.html" class="right"><span class="dir">Finish 🎉</span>Back to Home</a>
+</div>
+
+</main>
+<footer class="site">
+  <p>Manim Slides Academy — open source (MIT), <b>AI-generated</b> content, human-reviewed examples that all actually render.<br>
+  Works 100% offline · No trackers, no cookies, no network requests ·
+  <a href="https://github.com/">Contribute on GitHub</a></p>
+</footer>
+</body>
+</html>
