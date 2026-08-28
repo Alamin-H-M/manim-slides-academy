@@ -94,7 +94,7 @@ BODY = """
 top of every page is your scoreboard.</p>
 <table>
   <tr><th>Action</th><th>XP</th></tr>
-  <tr><td>Finish a topic (tick “mark done”)</td><td style="color:var(--accent2)"><b>+15 to +25</b></td></tr>
+  <tr><td>Finish a topic — <b>automatic</b>: read to its end and clear its exercises</td><td style="color:var(--accent2)"><b>+15 to +25</b></td></tr>
   <tr><td>Solve a “write this in LaTeX” challenge</td><td style="color:var(--accent2)"><b>+10</b></td></tr>
   <tr><td>Answer a quiz correctly (first time)</td><td style="color:var(--accent2)"><b>+5</b></td></tr>
   <tr><td>Remember a practice flashcard</td><td style="color:var(--accent2)"><b>+3</b> (every day — reviewing IS the work)</td></tr>
@@ -113,8 +113,9 @@ item across every chapter, challenge and quiz. 80% completed means exactly that.
 <button id="msa-export" class="copybtn" style="position:static">export progress</button>
 <label class="copybtn" style="position:static;cursor:pointer">import progress<input id="msa-import" type="file" accept=".json" style="display:none"></label>
 — export before clearing browser data or switching machines; import restores XP, streak, ticks, challenges and flashcards.</p>
-<p class="muted small">Anti-cheat, sort of: each topic/challenge/quiz pays out once ever. Flashcard XP repeats
-daily because re-reviewing genuinely is the work. Un-ticking a topic takes its XP back. Everything lives in
+<p class="muted small">Anti-cheat, sort of: each topic/challenge/quiz pays out once ever, and topics complete
+themselves — only when you’ve actually scrolled to the end <i>and</i> solved everything inside, so there’s
+nothing to tick (or to cheat). Flashcard XP repeats daily because re-reviewing genuinely is the work. Everything lives in
 localStorage — use the export button above so your legend survives a browser reset.</p>
 <h2>The path — a complete learning system</h2>
 <p class="lead">This is not just reading material. It's a full loop based on how memory actually works:

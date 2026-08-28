@@ -169,8 +169,9 @@ def topic(n: int, key: str, title: str, intro: str, body: str, xp: int = 15) -> 
     register_box(key, xp)
     return (f'<h2 id="{key}"><span class="tno">{n}</span>{title}</h2>'
             f'<p class="lead">{intro}</p>{body}'
-            f'<div class="topic-end"><label class="donebox"><input type="checkbox" data-key="{key}" data-xp="{xp}">'
-            f' I finished topic {n} — mark done <span class="xp-tag">+{xp} XP</span></label></div>')
+            f'<div class="topic-end"><label class="donebox auto"><input type="checkbox" disabled data-key="{key}" data-xp="{xp}">'
+            f' <span class="done-msg">Topic {n} completes automatically — read to the end and clear its exercises</span>'
+            f' <span class="xp-tag">+{xp} XP</span></label></div>')
 
 
 def page(filename: str, title: str, body: str, katex: bool = False, desc: str = "") -> str:

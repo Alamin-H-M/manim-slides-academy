@@ -27,6 +27,9 @@ disable the alias: Settings → Apps → Advanced app settings → App execution
 # pyside6 gives you the native presenter window (GUI) — worth having.""", "shell") + """
 <p>That's the entire animation stack. <code>manim-slides</code> pulls in everything it needs,
 including <code>python-pptx</code> for PowerPoint export.</p>
+<div class="tip"><b>No FFmpeg install needed.</b> Manim CE &ge; 0.19 encodes video through its
+bundled <code>PyAV</code> library — you do <b>not</b> have to download or install an ffmpeg binary.
+(Older tutorials that say otherwise predate this change.)</div>
 <div class="note"><b>Which quality flag?</b> While learning use <code>-ql</code> (480p, fast).
 Only your final render needs <code>-qh</code> (1080p60). Manim caches unchanged animations,
 so re-renders after small edits are much faster than the first one.</div>
@@ -50,7 +53,7 @@ and you're offline-ready forever.</div>
 <tr><td><b><a href="https://github.com/Alamin-H-M/manim-slides-preview">Manim Slides Preview</a></b> (.vsix, offline — download from GitHub)</td><td>The ▶-button → auto-preview workflow used in this course; installs from a local file, no marketplace/internet.</td></tr>
 </table>
 """ + pre("""# install a .vsix without internet:
-code --install-extension manim-slides-preview-1.7.0.vsix""", "shell") + """
+code --install-extension manim-slides-preview-1.7.4.vsix   # use the version you downloaded""", "shell") + """
 
 <h2 id="extension"><span class="tno">5</span>The one-keystroke workflow</h2>
 <p>With the extension installed, the whole edit-render-preview loop collapses to:</p>

@@ -202,12 +202,15 @@ details.answer .inner { margin-top: 10px; }
 .quiz input { margin-right: 9px; accent-color: var(--accent); }
 .quiz .verdict { font-size: 0.9rem; margin-top: 6px; min-height: 1.2em; }
 
-/* progress checkboxes */
+/* progress checkboxes (auto-completed — read + solve, no manual ticking) */
 .donebox {
   display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem;
-  color: var(--muted); cursor: pointer; user-select: none; margin-left: auto;
+  color: var(--muted); cursor: default; user-select: none; margin-left: auto;
 }
-.donebox input { accent-color: var(--accent2); width: 16px; height: 16px; }
+.donebox input { accent-color: var(--accent2); width: 16px; height: 16px; pointer-events: none; }
+.topic-end.done .donebox, .donebox.auto .done-msg { transition: color .3s; }
+.topic-end.done { border-color: var(--accent2); }
+.topic-end.done .done-msg { color: var(--accent2); font-weight: 600; }
 
 /* toc */
 .toc {

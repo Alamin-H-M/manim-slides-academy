@@ -202,4 +202,4 @@ next();
 </div>
 """
     return page("practice.html", "Practice", body, katex=True,
-                desc="Spaced-repetition flashcards for LaTeX, Manim and manim-slides: 36 interleaved retrieval-practice cards with a Leitner scheduling system — the evidence-based way to make the course stick.")
+                desc="Spaced-repetition flashcards for LaTeX, Manim and manim-slides: 49 interleaved retrieval-practice cards with a Leitner scheduling system — the evidence-based way to make the course stick.")

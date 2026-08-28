@@ -204,19 +204,150 @@
     });
   });
 
-  /* ---------- per-topic "done" checkboxes persisted in localStorage ---------- */
+  /* ---------- AUTO topic completion ----------------------------------------
+   * No manual ticking. A topic completes itself when BOTH are true:
+   *   1. you actually reached its end (the end-marker scrolled into view,
+   *      and at least a few seconds passed since its heading appeared —
+   *      so racing the scrollbar doesn't count), and
+   *   2. every interactive item inside the topic (LaTeX challenge / quiz)
+   *      has been solved.
+   * State still lives in "msa-progress", so progress from the old manual
+   * system is preserved. ----------------------------------------------- */
   var LS = "msa-progress";
   var store = {};
   try { store = JSON.parse(localStorage.getItem(LS) || "{}"); } catch (_) {}
+
+  function challengeWins() {
+    try { return JSON.parse(localStorage.getItem("msa-challenges") || "{}"); } catch (_) { return {}; }
+  }
+  function quizWins() {
+    try { return (JSON.parse(localStorage.getItem("msa-game") || "{}").aw) || {}; } catch (_) { return {}; }
+  }
+
+  var topics = []; // { key, xp, box, wrap, items:[{t,k}], headAt:0, endSeen:false }
+  var MIN_READ_MS = 8000; // reaching the end counts only ~8s after the heading appeared
+
   document.querySelectorAll(".donebox input").forEach(function (cb) {
     var key = cb.getAttribute("data-key");
     var xp = parseInt(cb.getAttribute("data-xp") || "15", 10);
-    cb.checked = !!store[key];
-    cb.addEventListener("change", function () {
-      store[key] = cb.checked;
-      try { localStorage.setItem(LS, JSON.stringify(store)); } catch (_) {}
-      window.dispatchEvent(new CustomEvent("msa-xp", { detail: { delta: cb.checked ? xp : -xp } }));
+    cb.disabled = true; // never hand-ticked
+    var wrap = cb.closest(".topic-end") || cb.parentElement;
+    // Collect the interactive items between the previous <h2> and this box.
+    var items = [];
+    var node = wrap.previousElementSibling, head = null;
+    while (node) {
+      if (/^H2$/i.test(node.tagName)) { head = node; break; }
+      if (node.classList) {
+        if (node.classList.contains("tex-challenge"))
+          items.push({ t: "ch", k: node.getAttribute("data-key") });
+        node.querySelectorAll && node.querySelectorAll(".tex-challenge").forEach(function (c) {
+          items.push({ t: "ch", k: c.getAttribute("data-key") });
+        });
+        if (node.classList.contains("quiz"))
+          items.push({ t: "qz", k: node.getAttribute("data-key") });
+        node.querySelectorAll && node.querySelectorAll(".quiz").forEach(function (q) {
+          items.push({ t: "qz", k: q.getAttribute("data-key") });
+        });
+      }
+      node = node.previousElementSibling;
+    }
+    // de-dup (querySelectorAll may re-find the node itself)
+    var seen = {}; items = items.filter(function (it) {
+      if (!it.k || seen[it.t + it.k]) return false; seen[it.t + it.k] = 1; return true;
     });
+    var T = { key: key, xp: xp, box: cb, wrap: wrap, head: head, items: items,
+              headAt: 0, endSeen: false };
+    topics.push(T);
+    if (store[key]) markDone(T, false);
+    else updateHint(T);
+  });
+
+  function itemsDone(T) {
+    if (!T.items.length) return true;
+    var ch = challengeWins(), qz = quizWins();
+    return T.items.every(function (it) {
+      return it.t === "ch" ? !!ch[it.k] : !!qz[it.k];
+    });
+  }
+  function remainingCount(T) {
+    var ch = challengeWins(), qz = quizWins(), n = 0;
+    T.items.forEach(function (it) {
+      if (!(it.t === "ch" ? ch[it.k] : qz[it.k])) n++;
+    });
+    return n;
+  }
+  function updateHint(T) {
+    var msg = T.wrap.querySelector(".done-msg");
+    if (!msg || store[T.key]) return;
+    var left = remainingCount(T);
+    if (!T.endSeen)
+      msg.textContent = T.items.length
+        ? "Completes automatically — read to the end and solve the " +
+          (T.items.length === 1 ? "exercise above" : "exercises above")
+        : "Completes automatically when you read to the end";
+    else if (left)
+      msg.textContent = left === 1
+        ? "Almost! One exercise above still needs solving"
+        : "Almost! " + left + " exercises above still need solving";
+  }
+  function markDone(T, celebrate) {
+    T.box.checked = true;
+    T.wrap.classList.add("done");
+    var msg = T.wrap.querySelector(".done-msg");
+    if (msg) msg.textContent = "✓ Topic complete!";
+    if (!celebrate) return;
+    store[T.key] = true;
+    try { localStorage.setItem(LS, JSON.stringify(store)); } catch (_) {}
+    window.dispatchEvent(new CustomEvent("msa-xp",
+      { detail: { delta: T.xp, key: T.key, label: "topic complete" } }));
+  }
+  function tryComplete(T) {
+    if (store[T.key]) return;
+    if (!T.endSeen) return;
+    if (T.headAt && (Date.now() - T.headAt) < MIN_READ_MS) {
+      setTimeout(function () { tryComplete(T); }, MIN_READ_MS - (Date.now() - T.headAt) + 100);
+      return;
+    }
+    if (!itemsDone(T)) { updateHint(T); return; }
+    markDone(T, true);
+  }
+
+  if (topics.length && "IntersectionObserver" in window) {
+    var headIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        topics.forEach(function (T) {
+          if (T.head === en.target && !T.headAt) T.headAt = Date.now();
+        });
+        headIO.unobserve(en.target);
+      });
+    }, { threshold: 0.1 });
+    var endIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        topics.forEach(function (T) {
+          if (T.wrap === en.target && !T.endSeen) {
+            T.endSeen = true;
+            if (!T.headAt) T.headAt = Date.now() - MIN_READ_MS; // no heading? count now
+            tryComplete(T);
+          }
+        });
+        endIO.unobserve(en.target);
+      });
+    }, { threshold: 0.5 });
+    topics.forEach(function (T) {
+      if (T.head) headIO.observe(T.head);
+      T.headAt = T.headAt || 0;
+      endIO.observe(T.wrap);
+    });
+  } else {
+    // Ancient browser fallback: complete on items alone.
+    topics.forEach(function (T) { T.endSeen = true; tryComplete(T); });
+  }
+
+  /* solving a challenge/quiz may finish its topic — re-check on every award */
+  window.addEventListener("msa-xp", function () {
+    setTimeout(function () { topics.forEach(tryComplete); topics.forEach(updateHint); }, 50);
   });
 
   /* ---------- highlight current nav entry ---------- */
