@@ -25,4 +25,30 @@ for name, fn in PAGES.items():
     with open(out, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"{name}: {len(html) // 1024} KB")
+
+# ---- assets: minify generator/src/site.{js,css} -> site/assets/ ------------
+# Sources of truth live in generator/src/. If esbuild is available it minifies
+# them (~45% smaller); otherwise the readable sources are copied verbatim so
+# the build never breaks. Never edit site/assets/js|css directly.
+import shutil, subprocess
+SRC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "src")
+esbuild = None
+for cand in ("esbuild", "/tmp/esb/node_modules/.bin/esbuild"):
+    if shutil.which(cand) or os.path.exists(cand):
+        esbuild = cand
+        break
+for src_name, dst_rel, flags in (
+        ("site.js",  os.path.join("assets", "js",  "site.js"),  ["--minify", "--target=es2017", "--legal-comments=none"]),
+        ("site.css", os.path.join("assets", "css", "site.css"), ["--minify"])):
+    src = os.path.join(SRC, src_name)
+    dst = os.path.join(SITE, dst_rel)
+    if not os.path.exists(src):
+        continue
+    if esbuild:
+        subprocess.run([esbuild, src] + flags + ["--outfile=" + dst],
+                       check=True, capture_output=True)
+        print(f"{dst_rel}: minified ({os.path.getsize(dst) // 1024} KB)")
+    else:
+        shutil.copyfile(src, dst)
+        print(f"{dst_rel}: copied unminified (install esbuild to minify)")
 print("done.")
