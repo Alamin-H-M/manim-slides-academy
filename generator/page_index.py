@@ -54,7 +54,8 @@ BODY = """
   <div class="card">
     <h3>2 · Manim</h3>
     <p>Programmatic animation. <b>11 topics, 32 real rendered animations</b> — from your first
-    circle to camera work, 3D surfaces and production rendering flags.</p>
+    circle to camera work, 3D surfaces and production rendering flags. Every topic ends with a
+    “your turn to write” code challenge with a live requirements checklist.</p>
     <a class="go" href="manim.html">Start Manim →</a>
   </div>
   <div class="card">
@@ -72,7 +73,8 @@ BODY = """
   <div class="card">
     <h3>3 · manim-slides</h3>
     <p>Turn animations into presentations. <b>6 topics</b> with click-through interactive decks —
-    up to canvas headers, wipe/zoom transitions, speaker notes and every export target.</p>
+    up to canvas headers, wipe/zoom transitions, speaker notes and every export target. Each topic
+    ends with a “your turn to write” challenge, down to the exact CLI commands.</p>
     <a class="go" href="slides.html">Start manim-slides →</a>
   </div>
 </div>
@@ -95,7 +97,7 @@ top of every page is your scoreboard.</p>
 <table>
   <tr><th>Action</th><th>XP</th></tr>
   <tr><td>Finish a topic — <b>automatic</b>: read to its end and clear its exercises</td><td style="color:var(--accent2)"><b>+15 to +25</b></td></tr>
-  <tr><td>Solve a “write this in LaTeX” challenge</td><td style="color:var(--accent2)"><b>+10</b></td></tr>
+  <tr><td>Solve a “your turn to write” challenge (LaTeX, Manim or manim-slides code)</td><td style="color:var(--accent2)"><b>+10</b></td></tr>
   <tr><td>Answer a quiz correctly (first time)</td><td style="color:var(--accent2)"><b>+5</b></td></tr>
   <tr><td>Remember a practice flashcard</td><td style="color:var(--accent2)"><b>+3</b> (every day — reviewing IS the work)</td></tr>
   <tr><td>Wrong quiz answer</td><td style="color:var(--danger)"><b>−2</b></td></tr>

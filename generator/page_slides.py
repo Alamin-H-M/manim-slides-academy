@@ -1,5 +1,79 @@
-from common import page, pre, deck, example, quiz, exercise, topic, pretest, set_page
+from common import page, pre, deck, example, quiz, exercise, topic, pretest, set_page, pychallenge, TOPIC_EXTRAS
 set_page("slides.html")
+
+# ---- "your turn to write" challenges: one per topic, appended inside it ----
+TOPIC_EXTRAS.update({
+"sld-first": pychallenge("pc-sldfirst", "Your turn to write — your first Slide:",
+    "Convert a scene to slides: import <code>Slide</code> from manim_slides, subclass it as <code>MyTalk</code>, play one animation, then call <code>next_slide()</code>.",
+    [[r"from\s+manim_slides\s+import\s+Slide", "from manim_slides import Slide"],
+     [r"class\s+MyTalk\s*\(\s*Slide\s*\)", "class MyTalk(Slide)"],
+     [r"def\s+construct\s*\(\s*self\s*\)", "def construct(self)"],
+     [r"self\.play\s*\(", "plays an animation"],
+     [r"self\.next_slide\s*\(\s*\)", "calls self.next_slide()"]],
+"""from manim import *
+from manim_slides import Slide
+
+class MyTalk(Slide):
+    def construct(self):
+        self.play(Create(Circle()))
+        self.next_slide()""",
+    "One import + one base-class change + next_slide() = a presentation."),
+
+"sld-run": pychallenge("pc-sldrun", "Your turn to write — render and export:",
+    "Write the <b>two commands</b>: render <code>MyTalk</code> from <code>talk.py</code> with manim-slides, then convert it to <b>offline HTML</b> named <code>talk.html</code>.",
+    [[r"manim-slides\s+render", "manim-slides render …"],
+     [r"talk\.py", "…of talk.py"],
+     [r"MyTalk", "…scene MyTalk"],
+     [r"manim-slides\s+convert", "manim-slides convert …"],
+     [r"--offline", "…with --offline"],
+     [r"talk\.html", "…to talk.html"]],
+"""manim-slides render talk.py MyTalk
+manim-slides convert --offline MyTalk talk.html""",
+    "render first, then convert; --offline bundles Reveal.js so it works with no internet."),
+
+"sld-craft": pychallenge("pc-sldcraft", "Your turn to write — the loop-while-talking pattern:",
+    "Write a slide segment that <b>loops</b>: call <code>next_slide</code> with <code>loop=True</code>, play a <code>Rotate</code> animation, then call <code>next_slide()</code> again to close the loop.",
+    [[r"next_slide\s*\(\s*loop\s*=\s*True\s*\)", "next_slide(loop=True)"],
+     [r"self\.play\s*\(", "plays inside the loop"],
+     [r"Rotate\s*\(", "…a Rotate animation"],
+     [r"next_slide\s*\(\s*\)", "closes with next_slide()"]],
+"""self.next_slide(loop=True)
+self.play(Rotate(star, TAU, run_time=4, rate_func=linear))
+self.next_slide()""",
+    "Everything between loop=True and the next next_slide() replays until you advance."),
+
+"sld-advanced": pychallenge("pc-sldadv", "Your turn to write — a header that survives the wipe:",
+    "Add a title to the <b>canvas</b> so it stays during transitions: <code>self.add_to_canvas(title=…)</code>, then <code>wipe</code> to the next content <b>excluding the canvas</b>.",
+    [[r"add_to_canvas\s*\(", "add_to_canvas(...)"],
+     [r"title\s*=", "…registers title=…"],
+     [r"self\.wipe\s*\(", "uses self.wipe(...)"],
+     [r"canvas_mobjects|self\.mobjects_without_canvas", "…keeping canvas out of the wipe"]],
+"""title = Text("My Talk").to_edge(UP)
+self.add_to_canvas(title=title)
+self.add(title)
+self.wipe(self.mobjects_without_canvas, [Circle()])""",
+    "Canvas mobjects persist across wipes; wipe everything EXCEPT them with mobjects_without_canvas."),
+
+"sld-export": pychallenge("pc-sldexp", "Your turn to write — the conference-safe exports:",
+    "Write the two conversion commands for a no-internet venue: one to a <b>single self-contained HTML file</b> (offline + one file), one to <b>PowerPoint</b>.",
+    [[r"manim-slides\s+convert", "manim-slides convert …"],
+     [r"--offline", "--offline"],
+     [r"--one-file|-1", "single file (--one-file)"],
+     [r"--to\s+pptx|\.pptx", "…and one to pptx"]],
+"""manim-slides convert --offline --one-file MyTalk talk.html
+manim-slides convert --to pptx MyTalk talk.pptx""",
+    "--one-file inlines everything into one .html; --to pptx makes the PowerPoint."),
+
+"sld-workflow": pychallenge("pc-sldflow", "Your turn to write — the full loop from memory:",
+    "The complete pipeline as three commands: <b>render</b> talk.py MyTalk, <b>convert</b> to offline HTML, <b>present</b> with the native GUI.",
+    [[r"manim-slides\s+render\s+talk\.py\s+MyTalk", "manim-slides render talk.py MyTalk"],
+     [r"manim-slides\s+convert[^\n]*--offline", "convert … --offline"],
+     [r"manim-slides\s+present\s+MyTalk", "manim-slides present MyTalk"]],
+"""manim-slides render talk.py MyTalk
+manim-slides convert --offline MyTalk talk.html
+manim-slides present MyTalk""",
+    "render → convert → present. (The VS Code extension runs this exact loop on every Ctrl+S.)"),
+})
 
 T1 = topic(1, "sld-first", "From Scene to Slide — one import, one call", """
 Change <code>Scene</code> to <code>Slide</code> (from manim_slides) and call

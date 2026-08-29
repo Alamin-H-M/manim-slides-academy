@@ -19,12 +19,28 @@ PAGES = {
     "reference.html": page_reference.render,
 }
 
+import re as _re
+# HTML minifier: collapse whitespace runs to one space, drop pure inter-tag
+# whitespace — but NEVER inside pre / textarea / script / style, where
+# whitespace is meaningful (code samples, playground seeds, JSON payloads).
+_PROTECT = _re.compile(r"(<pre\b[\s\S]*?</pre>|<textarea\b[\s\S]*?</textarea>"
+                       r"|<script\b[\s\S]*?</script>|<style\b[\s\S]*?</style>)",
+                       _re.I)
+
+def _minify_html(doc: str) -> str:
+    parts = _PROTECT.split(doc)
+    for i in range(0, len(parts), 2):          # even indexes = outside protected tags
+        parts[i] = _re.sub(r"[ \t\r\n]+", " ", parts[i])
+        parts[i] = _re.sub(r"> +<", "> <", parts[i])  # keep ONE space: inline-element spacing is meaningful
+    return "".join(parts).strip()
+
 for name, fn in PAGES.items():
     out = os.path.join(SITE, name)
     html = fn()
+    mini = _minify_html(html)
     with open(out, "w", encoding="utf-8") as f:
-        f.write(html)
-    print(f"{name}: {len(html) // 1024} KB")
+        f.write(mini)
+    print(f"{name}: {len(html) // 1024} KB -> {len(mini) // 1024} KB")
 
 # ---- assets: minify generator/src/site.{js,css} -> site/assets/ ------------
 # Sources of truth live in generator/src/. If esbuild is available it minifies

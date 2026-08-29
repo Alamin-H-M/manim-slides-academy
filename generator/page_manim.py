@@ -1,5 +1,151 @@
-from common import page, pre, vid, example, quiz, exercise, topic, pretest, set_page
+from common import page, pre, vid, example, quiz, exercise, topic, pretest, set_page, pychallenge, TOPIC_EXTRAS
 set_page("manim.html")
+
+# ---- "your turn to write" challenges: one per topic, appended inside it ----
+TOPIC_EXTRAS.update({
+"mnm-scene": pychallenge("pc-scene", "Your turn to write — your very first scene:",
+    "Write a scene class called <code>MyFirst</code> that creates a <b>blue Circle</b> and plays <code>Create</code> on it.",
+    [[r"class\s+MyFirst\s*\(\s*Scene\s*\)", "class MyFirst(Scene)"],
+     [r"def\s+construct\s*\(\s*self\s*\)", "def construct(self)"],
+     [r"Circle\s*\(", "makes a Circle"],
+     [r"(color\s*=\s*BLUE|BLUE)", "colored BLUE"],
+     [r"self\.play\s*\(\s*Create\s*\(", "plays Create(...)"]],
+"""class MyFirst(Scene):
+    def construct(self):
+        circle = Circle(color=BLUE)
+        self.play(Create(circle))""",
+    "Subclass Scene, override construct(self), then self.play(Create(...))."),
+
+"mnm-anim": pychallenge("pc-anim", "Your turn to write — three beats of animation:",
+    "A <b>Square</b> appears with <code>Create</code>, <b>transforms</b> into a Circle, then <b>fades out</b>. Three plays.",
+    [[r"Square\s*\(", "makes a Square"],
+     [r"self\.play\s*\(\s*Create\s*\(", "plays Create(...)"],
+     [r"Transform\s*\(", "uses Transform(...)"],
+     [r"Circle\s*\(", "…into a Circle"],
+     [r"FadeOut\s*\(", "ends with FadeOut(...)"]],
+"""sq = Square()
+self.play(Create(sq))
+self.play(Transform(sq, Circle()))
+self.play(FadeOut(sq))""",
+    "Transform(old, new) morphs in place — then FadeOut the same variable."),
+
+"mnm-pos": pychallenge("pc-pos", "Your turn to write — place things precisely:",
+    "Make a Circle, put a <code>Text</code> label <b>below it</b> with <code>next_to</code>, then group both in a <code>VGroup</code> and <code>shift</code> the group 2 units LEFT.",
+    [[r"next_to\s*\(", "label placed with next_to(...)"],
+     [r"\bDOWN\b", "…below (DOWN)"],
+     [r"VGroup\s*\(", "grouped in a VGroup"],
+     [r"\.shift\s*\(", "group shifted"],
+     [r"LEFT\s*\*\s*2|2\s*\*\s*LEFT", "…by 2 * LEFT"]],
+"""c = Circle()
+label = Text("a circle").next_to(c, DOWN)
+group = VGroup(c, label)
+group.shift(LEFT * 2)""",
+    "next_to(mobject, DOWN) positions relative to another mobject; shift moves by a vector."),
+
+"mnm-style": pychallenge("pc-style", "Your turn to write — style it like you mean it:",
+    "Create a Square with <b>50% fill opacity</b>, then animate it turning <b>RED</b> using the <code>.animate</code> syntax.",
+    [[r"Square\s*\(", "makes a Square"],
+     [r"fill_opacity\s*=\s*0?\.5", "fill_opacity=0.5"],
+     [r"\.animate\.", "uses .animate"],
+     [r"set_color\s*\(\s*RED|set_fill\s*\(\s*RED", "…to RED"],
+     [r"self\.play\s*\(", "inside self.play(...)"]],
+"""sq = Square(fill_opacity=0.5)
+self.add(sq)
+self.play(sq.animate.set_color(RED))""",
+    "fill_opacity is a constructor argument; .animate turns any setter into an animation."),
+
+"mnm-updaters": pychallenge("pc-updaters", "Your turn to write — a number that counts:",
+    "Make a <code>ValueTracker</code> starting at 0, a <code>DecimalNumber</code> that <b>follows it with an updater</b>, and animate the tracker to <b>100</b>.",
+    [[r"ValueTracker\s*\(\s*0\s*\)", "ValueTracker(0)"],
+     [r"DecimalNumber\s*\(", "a DecimalNumber"],
+     [r"add_updater\s*\(|always_redraw\s*\(", "wired with an updater"],
+     [r"get_value\s*\(\s*\)", "reads tracker.get_value()"],
+     [r"\.animate\.set_value\s*\(\s*100\s*\)", "animates to set_value(100)"]],
+"""t = ValueTracker(0)
+num = DecimalNumber(0)
+num.add_updater(lambda m: m.set_value(t.get_value()))
+self.add(num)
+self.play(t.animate.set_value(100))""",
+    "The updater lambda runs every frame: m.set_value(tracker.get_value())."),
+
+"mnm-graphs": pychallenge("pc-graphs", "Your turn to write — a real plot:",
+    "Create <code>Axes</code>, plot <b>sin(x)</b> on them with a lambda, and play <code>Create</code> on both.",
+    [[r"Axes\s*\(", "creates Axes"],
+     [r"\.plot\s*\(", "calls axes.plot(...)"],
+     [r"lambda\s+x\s*:", "with a lambda x:"],
+     [r"np\.sin\s*\(\s*x\s*\)|sin\s*\(\s*x\s*\)", "…of sin(x)"],
+     [r"self\.play\s*\(\s*Create\s*\(", "plays Create(...)"]],
+"""ax = Axes()
+curve = ax.plot(lambda x: np.sin(x))
+self.play(Create(ax))
+self.play(Create(curve))""",
+    "axes.plot takes any function of x — a lambda is the shortest way."),
+
+"mnm-tex-adv": pychallenge("pc-texadv", "Your turn to write — equation morphing:",
+    "Write <code>MathTex</code> for <b>a²+b²=c²</b> split into <b>separate substrings</b> (so terms can move), then morph it into another MathTex with <code>TransformMatchingTex</code>.",
+    [[r"MathTex\s*\(", "uses MathTex"],
+     [r"MathTex\s*\([^)]*,[^)]*,", "…split into multiple substrings"],
+     [r"a\^?2|a\^\{?2\}?", "contains a²"],
+     [r"TransformMatchingTex\s*\(", "morphs with TransformMatchingTex"],
+     [r"self\.play\s*\(", "inside self.play(...)"]],
+"""eq1 = MathTex("a^2", "+", "b^2", "=", "c^2")
+eq2 = MathTex("c^2", "=", "a^2", "+", "b^2")
+self.play(Write(eq1))
+self.play(TransformMatchingTex(eq1, eq2))""",
+    "Every comma-separated string is a separately-animatable piece — that's the whole trick."),
+
+"mnm-timing": pychallenge("pc-timing", "Your turn to write — choreography:",
+    "Animate three squares appearing with <code>LaggedStart</code>, a <code>lag_ratio</code> of 0.3, a total <code>run_time</code> of 2, and a <code>rate_func</code> of your choice.",
+    [[r"LaggedStart\s*\(", "uses LaggedStart"],
+     [r"lag_ratio\s*=\s*0?\.3", "lag_ratio=0.3"],
+     [r"run_time\s*=\s*2", "run_time=2"],
+     [r"rate_func\s*=", "sets a rate_func"],
+     [r"self\.play\s*\(", "inside self.play(...)"]],
+"""squares = [Square().shift(LEFT*3), Square(), Square().shift(RIGHT*3)]
+self.play(LaggedStart(*[Create(s) for s in squares],
+                      lag_ratio=0.3),
+          run_time=2, rate_func=smooth)""",
+    "LaggedStart(*list_of_anims, lag_ratio=…) staggers them; run_time and rate_func go on play()."),
+
+"mnm-camera": pychallenge("pc-camera", "Your turn to write — move the camera:",
+    "In a <code>MovingCameraScene</code>, animate <code>self.camera.frame</code> to <b>scale to half size</b> and <b>move to</b> a dot.",
+    [[r"MovingCameraScene", "class extends MovingCameraScene"],
+     [r"self\.camera\.frame", "touches self.camera.frame"],
+     [r"\.animate", "with .animate"],
+     [r"scale\s*\(\s*0?\.5\s*\)", "scale(0.5)"],
+     [r"move_to\s*\(", "and move_to(...)"]],
+"""class ZoomIn(MovingCameraScene):
+    def construct(self):
+        dot = Dot(RIGHT * 3)
+        self.add(dot)
+        self.play(self.camera.frame.animate.scale(0.5).move_to(dot))""",
+    "The camera frame is just a mobject — scale it and move it like anything else."),
+
+"mnm-3d": pychallenge("pc-3d", "Your turn to write — enter the third dimension:",
+    "A <code>ThreeDScene</code> that sets a camera orientation (<code>phi</code> and <code>theta</code>), creates <code>ThreeDAxes</code> and a <code>Sphere</code>.",
+    [[r"ThreeDScene", "class extends ThreeDScene"],
+     [r"set_camera_orientation\s*\(", "sets camera orientation"],
+     [r"phi\s*=", "with phi=…"],
+     [r"ThreeDAxes\s*\(", "creates ThreeDAxes"],
+     [r"Sphere\s*\(", "and a Sphere"]],
+"""class My3D(ThreeDScene):
+    def construct(self):
+        self.set_camera_orientation(phi=70 * DEGREES, theta=-45 * DEGREES)
+        axes = ThreeDAxes()
+        ball = Sphere()
+        self.play(Create(axes), Create(ball))""",
+    "phi tilts down from the pole, theta spins around — 70°/-45° is the classic view."),
+
+"mnm-config": pychallenge("pc-config", "Your turn to write — the render command:",
+    "Write the terminal command that renders <code>MyScene</code> from <code>talk.py</code> at <b>high quality</b> and <b>opens the result</b> when done.",
+    [[r"\bmanim\b", "starts with manim"],
+     [r"-p|--preview", "opens when done (-p)"],
+     [r"-p?qh|-q\s*h|--quality", "high quality (-qh)"],
+     [r"talk\.py", "the file: talk.py"],
+     [r"MyScene", "the scene: MyScene"]],
+"manim -pqh talk.py MyScene",
+    "Flags combine: -pqh = preview + quality high. File before scene name."),
+})
 
 T1 = topic(1, "mnm-scene", "Scenes & Mobjects — the two words that explain everything", """
 A <b>Scene</b> is your canvas + timeline. A <b>Mobject</b> ("mathematical object") is anything drawable:

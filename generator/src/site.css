@@ -282,6 +282,18 @@ footer.site a { color: var(--muted); text-decoration: underline; }
 }
 .tex-challenge.won .yours { border-color: var(--accent2); }
 .tex-challenge .ch-status { font-size: 0.92rem; margin-top: 8px; min-height: 1.3em; }
+/* "your turn to write" code challenges */
+.py-challenge .goal-text { font-size: 0.95rem; line-height: 1.55; text-align: left; }
+.py-challenge textarea.code {
+  font-family: var(--mono, ui-monospace, monospace); min-height: 150px;
+  white-space: pre; tab-size: 4;
+}
+.py-challenge .ck-list { display: flex; flex-direction: column; gap: 6px; align-content: start; }
+.py-challenge .ck {
+  font-size: 0.86rem; padding: 5px 10px; border-radius: 7px;
+  border: 1px solid var(--border); color: var(--muted); background: var(--bg2);
+}
+.py-challenge .ck.ok { color: var(--accent2); border-color: var(--accent2); }
 .tex-challenge .ch-btns { margin-top: 8px; display: flex; gap: 8px; }
 .tex-challenge .ch-btns button {
   border: 1px solid var(--border); background: var(--bg3); color: var(--muted);

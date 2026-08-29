@@ -153,6 +153,8 @@ def exercise(question: str, answer_html: str) -> str:
 # page() then embeds the full list so any page can compute overall progress %.
 TOPIC_REGISTRY = []  # list of (key, xp, kind, page)  kind: box | ch | qz
 CURRENT_PAGE = ""    # set by each page module via set_page() before content
+TOPIC_EXTRAS = {}    # topic key -> extra HTML appended to that topic's body
+                     # (page modules fill this BEFORE defining their topics)
 
 
 def set_page(filename: str) -> None:
@@ -167,6 +169,7 @@ def register_box(key: str, xp: int, kind: str = "box") -> None:
 
 def topic(n: int, key: str, title: str, intro: str, body: str, xp: int = 15) -> str:
     register_box(key, xp)
+    body = body + TOPIC_EXTRAS.get(key, "")
     return (f'<h2 id="{key}"><span class="tno">{n}</span>{title}</h2>'
             f'<p class="lead">{intro}</p>{body}'
             f'<div class="topic-end"><label class="donebox auto"><input type="checkbox" disabled data-key="{key}" data-xp="{xp}">'
@@ -236,6 +239,27 @@ def challenge(key: str, prompt: str, target: str, hint: str = "") -> str:
             f'<div class="attempt">'
             f'<textarea spellcheck="false" placeholder="type your LaTeX here…" aria-label="LaTeX attempt"></textarea>'
             f'<div class="yours"></div></div>'
+            f'<div class="ch-status"></div>'
+            f'<div class="ch-btns"><button type="button" class="ch-hint">hint</button>'
+            f'<button type="button" class="ch-reveal">give up — show solution</button></div>'
+            f'</div>')
+
+
+def pychallenge(key: str, prompt: str, goal: str, musts, solution: str, hint: str = "") -> str:
+    """'Your turn to write' game for Python/CLI code: shows the goal in words,
+    user types code, live checklist shows which requirements pass (regexes are
+    tested against the whitespace-stripped input)."""
+    import json as _json
+    register_box(key, 10, "ch")
+    aesc = lambda t: html.escape(t, quote=True)
+    musts_json = aesc(_json.dumps(musts, separators=(",", ":")))
+    return (f'<div class="tex-challenge py-challenge" id="{key}" data-key="{key}" '
+            f'data-musts="{musts_json}" data-solution="{aesc(solution)}" data-hint="{aesc(hint)}">'
+            f'<div class="ch-q">🎯 {prompt}</div>'
+            f'<div class="target goal-text">{goal}</div>'
+            f'<div class="attempt">'
+            f'<textarea class="code" spellcheck="false" placeholder="write your code here…" aria-label="code attempt"></textarea>'
+            f'<div class="ck-list"></div></div>'
             f'<div class="ch-status"></div>'
             f'<div class="ch-btns"><button type="button" class="ch-hint">hint</button>'
             f'<button type="button" class="ch-reveal">give up — show solution</button></div>'

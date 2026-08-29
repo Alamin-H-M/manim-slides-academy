@@ -37,8 +37,88 @@
   else initTexPlaygrounds();
 
   /* ---------- "write this in LaTeX" challenges ---------- */
+  /* ---------- "your turn to write" code challenges (Manim / manim-slides) --
+   * data-musts = JSON array of [regex, label] requirements. Each is tested
+   * live against the attempt; all green => solved (+10 XP, once). Uses the
+   * same localStorage key as the LaTeX challenges so progress % just works. */
+  function initPyChallenges() {
+    var chs = document.querySelectorAll(".py-challenge");
+    if (!chs.length) return;
+    var LSW = "msa-challenges";
+    var won = {};
+    try { won = JSON.parse(localStorage.getItem(LSW) || "{}"); } catch (_) {}
+
+    chs.forEach(function (ch) {
+      var key = ch.getAttribute("data-key");
+      var musts = [];
+      try { musts = JSON.parse(ch.getAttribute("data-musts") || "[]"); } catch (_) {}
+      var solution = ch.getAttribute("data-solution") || "";
+      var ta = ch.querySelector("textarea");
+      var list = ch.querySelector(".ck-list");
+      var status = ch.querySelector(".ch-status");
+      var hintBtn = ch.querySelector(".ch-hint");
+      var revealBtn = ch.querySelector(".ch-reveal");
+      var title = ch.querySelector(".ch-q");
+      var res = musts.map(function () { return false; });
+
+      function draw() {
+        list.innerHTML = musts.map(function (m, i) {
+          return '<span class="ck ' + (res[i] ? "ok" : "no") + '">' +
+                 (res[i] ? "\u2713 " : "\u25cb ") + m[1] + "</span>";
+        }).join("");
+      }
+      function celebrate() {
+        ch.classList.add("won");
+        status.textContent = "\u2713 Solved — that code does exactly what was asked!";
+        status.style.color = "var(--accent2)";
+        if (title && !title.querySelector(".badge-won")) {
+          var b = document.createElement("span");
+          b.className = "badge-won"; b.textContent = "SOLVED";
+          title.appendChild(b);
+        }
+        won[key] = true;
+        try { localStorage.setItem(LSW, JSON.stringify(won)); } catch (_) {}
+        window.dispatchEvent(new CustomEvent("msa-xp", { detail: { delta: 10, key: key } }));
+      }
+      function check() {
+        var v = ta.value;
+        var flat = v.replace(/\s+/g, " ");
+        var all = true;
+        musts.forEach(function (m, i) {
+          var ok = false;
+          try { ok = new RegExp(m[0]).test(flat) || new RegExp(m[0]).test(v); } catch (_) {}
+          res[i] = ok; if (!ok) all = false;
+        });
+        draw();
+        if (!v.trim()) { status.textContent = ""; return; }
+        if (all) celebrate();
+        else if (!ch.classList.contains("won")) {
+          var left = res.filter(function (r) { return !r; }).length;
+          status.textContent = left === 1 ? "One requirement to go!" : left + " requirements to go";
+          status.style.color = "var(--warn)";
+        }
+      }
+      ta.addEventListener("input", check);
+      if (hintBtn) hintBtn.addEventListener("click", function () {
+        status.textContent = "\ud83d\udca1 " + (ch.getAttribute("data-hint") || "Re-read the goal; each checklist line maps to one piece of code.");
+        status.style.color = "var(--accent)";
+      });
+      if (revealBtn) revealBtn.addEventListener("click", function () {
+        if (!ch.classList.contains("won") && !won[key])
+          window.dispatchEvent(new CustomEvent("msa-xp", { detail: { delta: -5, key: "rev-" + key, label: "gave up" } }));
+        ta.value = solution; check();
+        status.textContent = "Solution shown — now clear the box and write it from memory!";
+        status.style.color = "var(--muted)";
+      });
+      if (won[key]) { ta.value = solution; check(); }
+      else { draw(); }
+    });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initPyChallenges);
+  else initPyChallenges();
+
   function initChallenges() {
-    var chs = document.querySelectorAll(".tex-challenge");
+    var chs = document.querySelectorAll(".tex-challenge:not(.py-challenge)");
     if (!chs.length || !window.katex) { if (chs.length) setTimeout(initChallenges, 150); return; }
     var LSW = "msa-challenges";
     var won = {};
